@@ -508,7 +508,7 @@ document.getElementById('drawBtn').addEventListener('click',()=>{
 
 // 返回
 function goBack(){showPage('mainPage');}
-document.getElementById('resultClose').addEventListener('click',goBack);
+document.getElementById('resultClose').addEventListener('click',()=>{showPage('rolePage');});
 document.getElementById('switchRoleBtn').addEventListener('click',()=>{showPage('rolePage');});
 
 // 复制
