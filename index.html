@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>今日运势 - 欢迎来到互联网！</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; border-radius:0 !important; }
+  body { min-height:100vh; font-family:"MS Sans Serif","Segoe UI",Tahoma,Geneva,Verdana,sans-serif; font-size:14px; color:#000; background-color:#c0c0c0; background-image:linear-gradient(45deg,#b8b8b8 25%,transparent 25%),linear-gradient(-45deg,#b8b8b8 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#b8b8b8 75%),linear-gradient(-45deg,transparent 75%,#b8b8b8 75%); background-size:4px 4px; background-position:0 0,0 2px,2px -2px,-2px 0; }
+  /* 3D凸起 */
+  .bevel-out { border:2px solid; border-color:#fff #808080 #808080 #fff; box-shadow:inset -1px -1px 0 #404040,inset 1px 1px 0 #dfdfdf; }
+  .bevel-in { border:2px solid; border-color:#808080 #fff #fff #808080; box-shadow:inset 1px 1px 0 #404040,inset -1px -1px 0 #dfdfdf; }
+  .bevel-out:active,.btn:active { border-color:#808080 #fff #fff #808080 !important; box-shadow:inset 1px 1px 0 #404040,inset -1px -1px 0 #dfdfdf !important; transform:translate(1px,1px); }
+  /* 按钮 */
+  .btn { display:inline-block; padding:6px 20px; background:#c0c0c0; border:2px solid; border-color:#fff #808080 #808080 #fff; box-shadow:inset -1px -1px 0 #404040,inset 1px 1px 0 #dfdfdf; font-family:inherit; font-size:14px; font-weight:bold; text-transform:uppercase; letter-spacing:1px; cursor:pointer; text-decoration:none; color:#000; }
+  .btn:hover { background:#d0d0d0; }
+  .btn:focus-visible { outline:2px dotted #000; outline-offset:2px; }
+  .btn-blue { background:#0000ff; color:#fff; border-color:#5555ff #000080 #000080 #5555ff; }
+  .btn-blue:hover { background:#3333ff; }
+  .btn-red { background:#ff0000; color:#fff; border-color:#ff5555 #800000 #800000 #ff5555; }
+  .btn-red:hover { background:#ff3333; }
+  .btn-green { background:#00aa00; color:#fff; border-color:#00ff00 #006600 #006600 #00ff00; }
+  .btn-green:hover { background:#00cc00; }
+  /* Win95窗口 */
+  .win-window { background:#c0c0c0; border:2px solid; border-color:#fff #808080 #808080 #fff; box-shadow:inset -1px -1px 0 #404040,inset 1px 1px 0 #dfdfdf; }
+  .win-titlebar { background:linear-gradient(to right,#000080,#1084d0); color:#fff; font-weight:bold; padding:4px 8px; font-size:14px; display:flex; justify-content:space-between; align-items:center; }
+  .win-titlebar .close-x { width:18px; height:18px; background:#c0c0c0; border:2px solid; border-color:#fff #808080 #808080 #fff; display:flex; justify-content:center; align-items:center; font-size:11px; font-weight:bold; cursor:pointer; color:#000; line-height:1; }
+  .win-titlebar .close-x:active { border-color:#808080 #fff #fff #808080; }
+  .win-content { border:2px solid; border-color:#808080 #fff #fff #808080; box-shadow:inset 1px 1px 0 #404040,inset -1px -1px 0 #dfdfdf; background:#fff; margin:4px; padding:12px; }
+  /* 跑马灯 */
+  .marquee-bar { background:#000080; color:#ffff00; padding:4px 0; font-weight:bold; font-size:13px; overflow:hidden; white-space:nowrap; }
+  .marquee-text { display:inline-block; animation:marqueeScroll 20s linear infinite; }
+  @keyframes marqueeScroll { 0%{transform:translateX(100vw)} 100%{transform:translateX(-100%)} }
+  /* 彩虹文字 */
+  .rainbow { animation:rainbow 4s linear infinite; font-weight:bold; }
+  @keyframes rainbow { 0%{color:#ff0000} 17%{color:#ff8000} 33%{color:#ffff00} 50%{color:#00ff00} 67%{color:#0080ff} 83%{color:#8000ff} 100%{color:#ff0000} }
+  /* 闪烁NEW */
+  .blink-new { animation:blinker 1s step-end infinite; color:#ff0000; font-weight:bold; font-size:11px; }
+  @keyframes blinker { 0%,50%{opacity:1} 51%,100%{opacity:0} }
+  /* 脉冲徽章 */
+  .pulse-badge { animation:pulseGlow 1.5s ease-in-out infinite; display:inline-block; background:#ff0000; color:#fff; padding:2px 8px; font-size:11px; font-weight:bold; }
+  @keyframes pulseGlow { 0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(255,0,0,0.7)} 50%{transform:scale(1.05);box-shadow:0 0 10px 2px rgba(255,0,0,0.5)} }
+  /* 黄黑条纹 */
+  .construction { background:repeating-linear-gradient(45deg,#ffff00,#ffff00 10px,#000 10px,#000 20px); padding:8px; }
+  .construction-inner { background:#c0c0c0; padding:8px; border:2px solid #000; }
+  /* 凹槽分割线 */
+  .hr-groove { border:none; height:4px; background:linear-gradient(to bottom,#808080 0%,#808080 50%,#fff 50%,#fff 100%); margin:12px 0; }
+  /* 访客计数器 */
+  .hit-counter { background:#000080; color:#00ff00; font-family:"Courier New",monospace; padding:6px 12px; font-size:13px; display:inline-block; border:2px solid; border-color:#808080 #fff #fff #808080; box-shadow:inset 1px 1px 0 #404040; }
+  /* 链接 */
+  a { color:#0000ff; text-decoration:underline; }
+  a:visited { color:#800080; }
+  a:hover { color:#ff0000; }
+  /* 布局 */
+  .container { max-width:640px; margin:0 auto; padding:8px; }
+  .page { display:none; }
+  .page.active { display:block; }
+  /* 角色选择网格 */
+  .role-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+  .role-card { background:#c0c0c0; border:2px solid; border-color:#fff #808080 #808080 #fff; box-shadow:inset -1px -1px 0 #404040,inset 1px 1px 0 #dfdfdf; padding:12px 4px; text-align:center; cursor:pointer; }
+  .role-card:hover { background:#d4d4d4; }
+  .role-card:active { border-color:#808080 #fff #fff #808080; box-shadow:inset 1px 1px 0 #404040,inset -1px -1px 0 #dfdfdf; transform:translate(1px,1px); }
+  .role-card .icon { font-size:14px; font-family:"Courier New",monospace; font-weight:bold; color:#00ff00; background:#000; padding:4px 6px; display:inline-block; border:1px solid #808080; }
+  .role-card .name { font-size:12px; font-weight:bold; margin-top:4px; }
+  .role-card .desc { font-size:10px; color:#808080; }
+  /* 签文窗口 */
+  .fortune-window { max-width:420px; margin:16px auto; }
+  .fortune-type { font-family:"Arial Black",Impact,sans-serif; font-size:42px; text-align:center; margin:8px 0; }
+  .fortune-sub { text-align:center; font-size:14px; color:#808080; font-family:"Courier New",monospace; margin-bottom:12px; }
+  .fortune-text { font-size:15px; line-height:1.8; text-align:center; margin:12px 0; padding:8px; background:#ffffcc; border:1px solid #808080; white-space:pre-line; }
+  .fortune-detail { font-size:13px; line-height:1.7; margin:8px 0; }
+  .fortune-tip { font-size:12px; background:#e8e8e8; padding:8px; border:1px solid #808080; white-space:pre-line; margin:8px 0; }
+  .lucky-box { display:flex; gap:16px; justify-content:center; margin:12px 0; padding:8px; background:#000080; }
+  .lucky-item { text-align:center; color:#00ff00; font-family:"Courier New",monospace; font-size:11px; }
+  .lucky-item .licon { font-size:20px; }
+  /* 历史面板 */
+  .overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,128,0.3); z-index:500; display:none; justify-content:center; align-items:center; }
+  .overlay.show { display:flex; }
+  .history-win { width:90%; max-width:500px; max-height:80vh; }
+  .history-win .win-content { max-height:60vh; overflow-y:auto; }
+  .history-row { padding:4px 8px; border-bottom:1px solid #808080; font-size:12px; }
+  .history-row:nth-child(odd) { background:#e8e8e8; }
+  /* 底部状态栏 */
+  .statusbar { position:fixed; bottom:0; left:0; right:0; background:#c0c0c0; border-top:2px solid; border-color:#fff #808080 #808080 #fff; padding:3px 8px; display:flex; justify-content:space-between; align-items:center; font-size:12px; z-index:10; }
+  .statusbar .segment { border:2px solid; border-color:#808080 #fff #fff #808080; padding:2px 8px; background:#c0c0c0; }
+  @media(max-width:520px) { .role-grid{grid-template-columns:repeat(2,1fr)} .fortune-type{font-size:32px} }
+</style>
+</head>
+<body>
+
+<!-- 跑马灯 -->
+<div class="marquee-bar">
+  <span class="marquee-text">★ 欢迎访问【今日运势占卜系统 v2.0】★ 本站自1997年运营至今 ★ 已为 9,999,999+ 打工人提供运势预测 ★ 最佳浏览器：Netscape Navigator 4.0 / IE5.0 ★ 建议分辨率 800x600 ★ </span>
+</div>
+
+<!-- 页面容器 -->
+<div class="container">
+
+  <!-- 角色选择页 -->
+  <div class="page active" id="rolePage">
+    <div class="win-window" style="margin-top:40px">
+      <div class="win-titlebar">
+        <span>C:\SYSTEM\identity.exe - 身份验证</span>
+      </div>
+      <div class="win-content">
+        <p style="text-align:center;margin-bottom:12px">
+          <span class="rainbow" style="font-family:'Arial Black',Impact;font-size:20px">＞＞＞ 接入身份验证 ＜＜＜</span>
+        </p>
+        <p style="text-align:center;color:#808080;font-size:12px;margin-bottom:16px">[ SYSTEM ] 请选择您的赛博工位以加载专属运势模块：</p>
+        <div class="role-grid" id="roleGrid"></div>
+        <hr class="hr-groove">
+        <p style="text-align:center;font-size:11px;color:#808080">
+          <label><input type="checkbox" id="rememberRole" checked> 记住我的选择（保存Cookie）</label>
+        </p>
+      </div>
+    </div>
+    <p style="text-align:center;margin-top:12px">
+      <span class="hit-counter">👁️ 访客计数: 00048721 | Since 1997</span>
+    </p>
+  </div>
+
+  <!-- 主页（签筒） -->
+  <div class="page" id="mainPage">
+    <div class="win-window" style="margin-top:40px">
+      <div class="win-titlebar">
+        <span id="mainTitle">🎰 今日运势 - 测试工程师</span>
+        <div class="close-x" id="switchRoleBtn" title="切换职业">✕</div>
+      </div>
+      <div class="win-content" style="text-align:center">
+        <p style="margin-bottom:16px">
+          <span class="rainbow" style="font-family:'Arial Black',Impact;font-size:24px">今 日 运 势</span>
+        </p>
+        <p style="color:#808080;font-size:12px;margin-bottom:16px" id="dateText"></p>
+        <div class="construction" style="margin-bottom:16px">
+          <div class="construction-inner" style="text-align:center">
+            <p style="font-family:'Arial Black';font-size:16px;color:#ff0000">⚠️ 点击下方按钮抽取今日运势 ⚠️</p>
+          </div>
+        </div>
+        <button class="btn btn-blue" id="drawBtn" style="font-size:16px;padding:12px 40px">
+          🎰 开始抽签！
+        </button>
+        <p style="margin-top:12px;font-size:11px;color:#808080" id="hintText">每日限抽一次，结果全天有效</p>
+        <hr class="hr-groove">
+        <span class="hit-counter" id="streakCounter">🔥 连续打卡: 0 天</span>
+      </div>
+    </div>
+    <p style="text-align:center;margin-top:8px">
+      <button class="btn" id="historyBtn" style="font-size:11px;padding:4px 12px">📜 查看历史记录</button>
+    </p>
+  </div>
+
+  <!-- 签文结果页 -->
+  <div class="page" id="resultPage">
+    <div class="fortune-window win-window">
+      <div class="win-titlebar">
+        <span id="resultTitle">📋 占卜结果 - 测试工程师</span>
+        <div class="close-x" id="resultClose">✕</div>
+      </div>
+      <div class="win-content">
+        <p style="text-align:center;font-family:'Courier New';font-size:11px;color:#808080" id="fortuneNum"></p>
+        <div class="fortune-type rainbow" id="fortuneType"></div>
+        <div class="fortune-sub" id="fortuneSub"></div>
+        <div class="fortune-text" id="fortuneText"></div>
+        <div class="fortune-detail" id="fortuneDetail"></div>
+        <hr class="hr-groove">
+        <div class="fortune-tip" id="fortuneTip"></div>
+        <div class="lucky-box" id="luckyBox"></div>
+        <hr class="hr-groove">
+        <p style="text-align:center">
+          <button class="btn" onclick="copyFortune()" style="font-size:11px">📋 复制结果</button>
+          <button class="btn" onclick="goBack()" style="font-size:11px;margin-left:8px">◀ 返回</button>
+        </p>
+        <p style="text-align:center;margin-top:8px">
+          <span class="blink-new">★ NEW! ★</span>
+          <span style="font-size:11px;color:#808080"> 每日运势已更新！</span>
+        </p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- 历史记录弹窗 -->
+<div class="overlay" id="historyOverlay">
+  <div class="history-win win-window">
+    <div class="win-titlebar">
+      <span>📜 历史记录</span>
+      <div class="close-x" id="historyClose">✕</div>
+    </div>
+    <div class="win-content" id="historyContent">
+      <p style="color:#808080;text-align:center">暂无记录...</p>
+    </div>
+  </div>
+</div>
+
+<!-- 底部状态栏 -->
+<div class="statusbar">
+  <div class="segment" id="statusRole">未选择职业</div>
+  <div class="segment" id="statusDate"></div>
+</div>
+
+<script>
+const roles = [
+  {id:'test',icon:'[BUG]',name:'测试',desc:'// 漏洞猎手'},
+  {id:'dev',icon:'C:\\>',name:'开发',desc:'// 码农.exe'},
+  {id:'pm',icon:'PRD>',name:'产品',desc:'// 需求编译器'},
+  {id:'design',icon:'#RGB',name:'设计',desc:'// 像素矿工'},
+  {id:'ops',icon:'root@',name:'运维',desc:'// 服务器驯兽师'},
+  {id:'data',icon:'SQL>',name:'数据',desc:'// 数据库考古学家'},
+  {id:'operation',icon:'DAU↑',name:'运营',desc:'// 增长永动机'},
+  {id:'risk',icon:'>>>',name:'风控',desc:'// 防火墙人形态'},
+];
+
+const fortuneDB = {
+test: [
+  {type:'★★★★★',sub:'[系统提示] 恭喜！您已获得满星评价！',text:'🎉 您今日的Bug已发货！\n请开发查收，拒签无效 📦',detail:'今天手感爆炸，随便点两下就出Bug。开发看到你的名字已经在瑟瑟发抖了。系统判定：今日提单量将突破历史记录！',tip:'✅ 推荐操作：疯狂测试核心功能 / 提P0大单\n❌ 禁止操作：摸鱼 / 写文档 / 开会',lucky:[{icon:'🏆',name:'MVP'},{icon:'🧋',name:'奶茶'},{icon:'💜',name:'紫色'},{icon:'7',name:'No.7'}],grade:10,theme:0},
+  {type:'★★★★★',sub:'[特殊事件] Bug雷达已开启！扫描范围：全图',text:'👁️ 恭喜获得全图透视！\n所有Bug已在小地图上标记 🗺️',detail:'今天你对系统的理解超过了写代码的人。每个接口、每个边界条件，你都能精准命中。产品经理看了你的用例都想给你加薪。',tip:'✅ 推荐操作：全链路走查 / 安全渗透测试\n❌ 禁止操作：只测正常流程',lucky:[{icon:'👁️',name:'透视'},{icon:'☕',name:'美式'},{icon:'❤️',name:'红色'},{icon:'9',name:'No.9'}],grade:10,theme:1},
+  {type:'★★★★★',sub:'[战报] 今日KDA预测：30/0/0',text:'🎯 您的暴击率已达 100%\n每次点击都是一个新Bug！',detail:'今天仿佛开了外挂。用例？不需要。凭直觉测就行。每一次操作都精准命中程序员没想到的角落。',tip:'✅ 推荐操作：探索性测试 / 边界暴力测试\n❌ 禁止操作：按部就班走用例',lucky:[{icon:'💎',name:'暴击'},{icon:'🍵',name:'抹茶'},{icon:'✨',name:'金色'},{icon:'8',name:'No.8'}],grade:10,theme:2},
+  {type:'★★★★★',sub:'[公告] 服务器已为您预留今日最佳运气',text:'😎 左手Bug右手Bug\n今天走到哪里哪里崩 💥',detail:'传说中一年出现不到10次的满运日！今天不管测什么模块都能出问题。开发们今天要加班了（不是你的错）。',tip:'✅ 推荐操作：干最重要的事\n❌ 禁止操作：把时间花在开会上',lucky:[{icon:'👑',name:'KING'},{icon:'🍹',name:'特调'},{icon:'🌈',name:'全色'},{icon:'6',name:'No.6'}],grade:10,theme:3},
+  {type:'★★★★☆',sub:'[状态] 当前战力：95/100',text:'⚡ 系统检测到您已进入\n高效率模式！请保持 💪',detail:'今天复现偶现Bug的概率提升300%！之前怎么都抓不到的问题，今天就是你的菜。记得开录屏——证据链要完整！',tip:'✅ 推荐操作：复现偶现Bug / 分析崩溃日志\n❌ 禁止操作：只跑正常流程交差',lucky:[{icon:'🔍',name:'侦探'},{icon:'☕',name:'美式'},{icon:'💙',name:'蓝色'},{icon:'3',name:'No.3'}],grade:8,theme:1},
+  {type:'★★★★☆',sub:'[Buff] 沟通力+50 说服力+30',text:'🤝 今天和开发说什么都管用\n推Bug修复成功率100%',detail:'今日沟通运拉满，你说这是Bug开发就认，你说P1他不敢改P2。趁今天把积压的都推一推！',tip:'✅ 推荐操作：Bug评审 / 推修复 / 需求讨论\n❌ 禁止操作：一个人闷头干活',lucky:[{icon:'🫱🏻‍🫲🏽',name:'握手'},{icon:'🫖',name:'花茶'},{icon:'💚',name:'绿色'},{icon:'2',name:'No.2'}],grade:8,theme:3},
+  {type:'★★★★☆',sub:'[技能冷却完毕] 灵感Buff已就绪',text:'💡 您的用例生成器已过载\n请及时输出避免内存溢出！',detail:'今天脑子里全是骚操作测试场景——各种边界条件、异常流程、并发冲突。赶紧写下来别让灵感溜了！',tip:'✅ 推荐操作：写用例 / 场景设计 / 脑暴\n❌ 禁止操作：只执行别人写的用例',lucky:[{icon:'💡',name:'灵感'},{icon:'🥤',name:'气泡水'},{icon:'💗',name:'粉色'},{icon:'5',name:'No.5'}],grade:8,theme:4},
+  {type:'★★★★☆',sub:'[称号解锁] 今日称号：火眼金睛',text:'🧐 真Bug假Bug？\n一眼就能分辨！准确率99%',detail:'今天判断力超强。是Bug还是Feature？是你的环境问题还是真的有问题？今天你说了算，评审会上你是C位。',tip:'✅ 推荐操作：Bug评审 / 优先级判定\n❌ 禁止操作：犹豫不决浪费时间',lucky:[{icon:'⚡',name:'果断'},{icon:'🍵',name:'铁观音'},{icon:'🧡',name:'橙色'},{icon:'1',name:'No.1'}],grade:8,theme:4},
+  {type:'★★★★☆',sub:'[模式切换] 已进入狂暴模式！效率x3',text:'🔥 今天就是你的主场！\n测什么都顺，提什么都对',detail:'状态大爆发！积压了一周的验证工作，今天半天就能清完。不要浪费这个状态，冲冲冲！',tip:'✅ 推荐操作：冲刺验证 / 清积压\n❌ 禁止操作：摸鱼看视频',lucky:[{icon:'🔥',name:'燃烧'},{icon:'☕',name:'浓缩'},{icon:'❤️',name:'红色'},{icon:'11',name:'No.11'}],grade:9,theme:2},
+  {type:'★★★☆☆',sub:'[系统消息] 今日状态：稳定运行中',text:'📋 您的工作进程运行正常\n无异常，无告警，稳定输出',detail:'今天没有大惊喜也没有大意外。按照计划一步步推进就行。回归验证、关单复测，这些日常工作今天做最合适。',tip:'✅ 推荐操作：回归验证 / 关单 / 整理文档\n❌ 禁止操作：临时加需求打乱节奏',lucky:[{icon:'📋',name:'有序'},{icon:'🥛',name:'牛奶'},{icon:'💚',name:'绿色'},{icon:'4',name:'No.4'}],grade:6,theme:3},
+  {type:'★★★☆☆',sub:'[提示] 您有1个技能点可分配',text:'📚 今天是充电日！\n升级你的测试技能树 🌲',detail:'不是每天都要疯狂输出。今天看看自动化怎么写、新工具怎么用、别人的测试方法论有什么可以学的。',tip:'✅ 推荐操作：学新工具 / 写自动化脚本\n❌ 禁止操作：只埋头干活不学习',lucky:[{icon:'📖',name:'升级'},{icon:'🍵',name:'菊花茶'},{icon:'🤎',name:'棕色'},{icon:'10',name:'No.10'}],grade:6,theme:0},
+  {type:'★★★☆☆',sub:'[路径错误] 请尝试其他方向',text:'🔄 此路不通？\n换条路马上就通了！',detail:'上午可能卡在某个问题上动不了。别死磕！换个模块测测，或者换个角度想想，灵感可能从别处冒出来。',tip:'✅ 推荐操作：换模块 / 换思路\n❌ 禁止操作：在一个点死磕到底',lucky:[{icon:'🔄',name:'转向'},{icon:'🧃',name:'果汁'},{icon:'💙',name:'湖蓝'},{icon:'12',name:'No.12'}],grade:6,theme:1},
+  {type:'★★★☆☆',sub:'[精度模式] 已启用像素级检测',text:'🔬 今天是细节控模式\n放大镜已装备！',detail:'适合做精细化工作——设计走查（间距对不对？颜色对不对？）、数据校验（小数点后几位？）、文案检查。',tip:'✅ 推荐操作：设计走查 / 数据校验\n❌ 禁止操作：粗枝大叶走个过场',lucky:[{icon:'🔬',name:'精密'},{icon:'🫖',name:'玫瑰茶'},{icon:'💗',name:'樱粉'},{icon:'6',name:'No.6'}],grade:6,theme:2},
+  {type:'★★★☆☆',sub:'[预热中...] 预计下午进入最佳状态',text:'✈️ 上午慢热中...\n下午直接起飞！别急',detail:'你是那种越到下午状态越好的类型。上午先做简单的事暖暖手，重头戏留到下午。',tip:'✅ 推荐操作：下午集中攻坚\n❌ 禁止操作：上午就安排最难的任务',lucky:[{icon:'📈',name:'起飞'},{icon:'☕',name:'卡布'},{icon:'💛',name:'暖黄'},{icon:'3',name:'No.3'}],grade:6,theme:4},
+  {type:'★★★☆☆',sub:'[成就解锁] 惊喜制造者',text:'🎁 你今天会发现一个\n让团队"哇！"的问题',detail:'今天测出来的东西正好是大家一直担心但没人验证过的。好好记录，这是你今天的高光时刻！',tip:'✅ 推荐操作：认真记录 / 分享发现\n❌ 禁止操作：好发现憋着不说',lucky:[{icon:'🎁',name:'惊喜'},{icon:'🫖',name:'蜜桃茶'},{icon:'🩷',name:'珊瑚'},{icon:'8',name:'No.8'}],grade:6,theme:5},
+  {type:'★★☆☆☆',sub:'[日常任务] 稳定输出也是一种实力',text:'💬 今天推Bug修复特别顺\n开发居然没反驳？！',detail:'沟通运好得离谱。趁今天把那些"已确认但没人修"的老Bug都推一推，今天推一个就能动一个。',tip:'✅ 推荐操作：推修复 / 对齐进度\n❌ 禁止操作：自己闷声干不同步',lucky:[{icon:'💬',name:'顺畅'},{icon:'🍵',name:'乌龙'},{icon:'💚',name:'薄荷'},{icon:'11',name:'No.11'}],grade:5,theme:3},
+  {type:'★★☆☆☆',sub:'[经验值+10] 每一步都在升级',text:'✨ 认真做的每一件事\n都在给你的技能条充能',detail:'今天可能没有"大发现"，但你截的每张图、录的每段屏、写的每条描述，都是高质量输出。',tip:'✅ 推荐操作：认真记录 / 高质量提单\n❌ 禁止操作：敷衍了事只求数量',lucky:[{icon:'📝',name:'积累'},{icon:'🥤',name:'柠檬水'},{icon:'💛',name:'鹅黄'},{icon:'9',name:'No.9'}],grade:5,theme:4},
+  {type:'★★☆☆☆',sub:'[组队加成] 队伍配合默契！',text:'🤜🤛 今天和同事配合起来\n1+1 > 3 的感觉！',detail:'协作运极佳。一起测效率直接翻倍，你负责发现、他负责复现、她负责记录——完美分工。',tip:'✅ 推荐操作：结对测试 / 联合排查\n❌ 禁止操作：各干各的不交流',lucky:[{icon:'🌟',name:'团魂'},{icon:'🫖',name:'红茶'},{icon:'💙',name:'天青'},{icon:'2',name:'No.2'}],grade:5,theme:1},
+  {type:'★★☆☆☆',sub:'[副本难度] 已切换至Hard模式',text:'💪 今天挑战一下有难度的！\n安全测试？性能测试？来吧',detail:'打怪升级的好日子。越难的场景越有成就感，经验值也涨得最快。别待在舒适区！',tip:'✅ 推荐操作：安全测试 / 性能测试\n❌ 禁止操作：只做简单重复的事',lucky:[{icon:'⚔️',name:'挑战'},{icon:'☕',name:'手冲'},{icon:'💙',name:'深蓝'},{icon:'13',name:'No.13'}],grade:5,theme:0},
+  {type:'★★☆☆☆',sub:'[环境检测] 所有设备在线！连接稳定',text:'🍀 难得！环境稳定、设备不掉线\n趁现在多测几个场景！',detail:'平时动不动就断连、崩溃的测试环境今天异常稳定。赶紧趁它心情好多跑几个场景！',tip:'✅ 推荐操作：多跑场景 / 批量验证\n❌ 禁止操作：浪费好环境做别的事',lucky:[{icon:'🍀',name:'稳定'},{icon:'🧋',name:'椰奶'},{icon:'🤍',name:'银白'},{icon:'5',name:'No.5'}],grade:5,theme:1},
+  {type:'★★☆☆☆',sub:'[正在下载...] 实践经验 loading...',text:'🛠️ 别光看文档了！\n直接上手操作效率翻倍',detail:'今天是"做"比"想"更重要的一天。打开手机直接测，比看十页文档有效十倍。Bug就在那等你去点。',tip:'✅ 推荐操作：动手实操 / 实机验证\n❌ 禁止操作：只看不做',lucky:[{icon:'🛠️',name:'实干'},{icon:'🥤',name:'冰美式'},{icon:'💙',name:'钴蓝'},{icon:'4',name:'No.4'}],grade:5,theme:1},
+  {type:'★☆☆☆☆',sub:'[日常签到] 签到成功！经验+1',text:'🧱 基础工作也是工作！\n每块砖都算数',detail:'今天就老老实实做基础的事——版本点检做完、边界用例补好、Bug清单整理一下。这些是后面起飞的跑道。',tip:'✅ 推荐操作：点检版本 / 补用例 / 整理清单\n❌ 禁止操作：急于求成跳步骤',lucky:[{icon:'🧱',name:'地基'},{icon:'🥛',name:'酸奶'},{icon:'🤎',name:'原木'},{icon:'1',name:'No.1'}],grade:4,theme:3},
+  {type:'★☆☆☆☆',sub:'[进度条] ████████░░ 80% 加载中...',text:'💧 没有大突破也别慌\n量变终会引起质变',detail:'今天可能没有亮眼的发现。但你做的每一个复测、每一次验证，都在积累——总有一天会爆发。',tip:'✅ 推荐操作：逐条复测 / 查漏补缺\n❌ 禁止操作：急功近利求速成',lucky:[{icon:'💧',name:'坚持'},{icon:'🍵',name:'白开水'},{icon:'💚',name:'草绿'},{icon:'10',name:'No.10'}],grade:4,theme:3},
+  {type:'★☆☆☆☆',sub:'[装备打造中] 明日战力+100',text:'⚔️ 今天是磨刀的日子\n明天才是砍柴的时候',detail:'搭环境、造测试数据、写自动化脚本、整理知识库...这些今天做了，明天的你会感谢今天的自己。',tip:'✅ 推荐操作：搭环境 / 造数据 / 写脚本\n❌ 禁止操作：没准备好就开测',lucky:[{icon:'⚔️',name:'磨刀'},{icon:'🫖',name:'普洱'},{icon:'🧡',name:'琥珀'},{icon:'8',name:'No.8'}],grade:4,theme:4},
+  {type:'★☆☆☆☆',sub:'[Loading...] 转机正在加载，请稍候',text:'🌈 遇到困难别急\n喝杯咖啡等等看',detail:'上午可能不太顺——环境崩了、设备掉线了、包装不上了。别慌，下午运气会转好。先做能做的事。',tip:'✅ 推荐操作：耐心等待 / 做不依赖环境的事\n❌ 禁止操作：情绪化 / 暴力重试',lucky:[{icon:'🌈',name:'转机'},{icon:'🧃',name:'橙汁'},{icon:'💙',name:'晴空'},{icon:'6',name:'No.6'}],grade:4,theme:1},
+  {type:'★☆☆☆☆',sub:'[隐藏任务] 小任务也有大意义',text:'🌱 做的事不起眼？\n但产品底线是你守住的',detail:'回归测试、兼容性验证、多语言检查...这些活没人看到，但出了问题第一个被骂的是没测出来的人。你今天守住了。',tip:'✅ 推荐操作：回归测试 / 兼容性 / 多语言\n❌ 禁止操作：觉得小事不值得认真做',lucky:[{icon:'🌱',name:'守护'},{icon:'🍵',name:'桂花茶'},{icon:'💛',name:'嫩黄'},{icon:'3',name:'No.3'}],grade:4,theme:5},
+  {type:'★☆☆☆☆',sub:'[倒计时] 距离起飞还有...3小时',text:'☕ 上午先缓缓\n下午才是你的时间！',detail:'你是后发制人型选手。上午就做做简单的事——回复消息、整理桌面、看看邮件。下午开始才是正题。',tip:'✅ 推荐操作：上午轻松 / 下午集中\n❌ 禁止操作：上午就安排最难的任务',lucky:[{icon:'☕',name:'慢热'},{icon:'🫖',name:'薄荷茶'},{icon:'💚',name:'翠绿'},{icon:'7',name:'No.7'}],grade:3,theme:3},
+  {type:'★☆☆☆☆',sub:'[剧透] 好结果正在赶来的路上',text:'🍬 今天付出的\n明天一定能看到回报',detail:'可能今天没什么成就感。没关系，处理完眼前的小事，把该做的做了，好运明天就到。',tip:'✅ 推荐操作：处理简单任务 / 为明天铺路\n❌ 禁止操作：一上来就啃最难的骨头',lucky:[{icon:'🍬',name:'甜蜜'},{icon:'☕',name:'摩卡'},{icon:'💜',name:'薰衣草'},{icon:'9',name:'No.9'}],grade:3,theme:0},
+  {type:'★☆☆☆☆',sub:'[预警系统] 第六感已激活',text:'🦊 虽然现在看不出问题\n但你的直觉是对的！',detail:'今天的直觉特别准。如果你觉得哪里不对劲——哪怕说不出为什么——记下来！大概率后面会验证你的判断。',tip:'✅ 推荐操作：记录可疑现象 / 标记待跟进\n❌ 禁止操作：觉得"可能没事"就跳过',lucky:[{icon:'🦊',name:'第六感'},{icon:'🧋',name:'芋泥'},{icon:'💗',name:'桃粉'},{icon:'5',name:'No.5'}],grade:3,theme:2},
+  {type:'★☆☆☆☆',sub:'[静音模式] 低调是最好的策略',text:'🦉 今天低调积累\n明天高调输出',detail:'今天适合整理知识库、优化Skill、准备文档。不用急着表现，闷声做大事。',tip:'✅ 推荐操作：整理文档 / 优化工具链\n❌ 禁止操作：急着出成果',lucky:[{icon:'🦉',name:'沉淀'},{icon:'🍵',name:'龙井'},{icon:'🤎',name:'深棕'},{icon:'2',name:'No.2'}],grade:3,theme:4},
+],
+};
+
+fortuneDB.dev = [
+  {type:'★★★★★',sub:'[系统提示] 代码之神附体！',text:'⌨️ 今天写的代码\n一次编译零报错！',detail:'手感爆炸，逻辑清晰到自己都害怕。什么复杂算法、并发问题，今天写起来行云流水。趁状态好把最难的模块啃了！',tip:'✅ 推荐操作：写核心模块 / 重构复杂逻辑\n❌ 禁止操作：写CRUD浪费手感',lucky:[{icon:'⌨️',name:'神之手'},{icon:'🧋',name:'奶茶'},{icon:'💜',name:'紫色'},{icon:'7',name:'No.7'}],grade:10,theme:0},
+  {type:'★★★★★',sub:'[特殊事件] Bug猎人反杀！今日零Bug',text:'🛡️ 测试提不了你的Bug\n因为你写的代码没有Bug',detail:'今天代码质量高得离谱，边界条件全覆盖、异常处理滴水不漏。测试同学看着你的代码只能摇头叹气——无从下手。',tip:'✅ 推荐操作：写关键业务逻辑 / 提交核心MR\n❌ 禁止操作：只改样式不写逻辑',lucky:[{icon:'🛡️',name:'无懈'},{icon:'☕',name:'美式'},{icon:'💙',name:'宝蓝'},{icon:'9',name:'No.9'}],grade:10,theme:1},
+  {type:'★★★★★',sub:'[战报] Git log: 10 commits, 0 reverts',text:'🚀 今天的产出\n够发三个PR了！',detail:'效率炸裂！别人一天写一个功能，你今天三个功能外加两个Bug修复。CR的同事看了直呼"你是不是开挂了"。',tip:'✅ 推荐操作：趁手热多产出 / 清技术债\n❌ 禁止操作：开了半天的会',lucky:[{icon:'🚀',name:'高产'},{icon:'🍵',name:'龙井'},{icon:'✨',name:'金色'},{icon:'1',name:'No.1'}],grade:10,theme:2},
+  {type:'★★★★★',sub:'[公告] 今日Debug速度：光速',text:'🔮 Bug在你面前无所遁形\n断点还没打就知道问题在哪',detail:'直觉式Debug今天全命中。看一眼报错就知道是哪行出的问题，甚至不用看堆栈就能定位root cause。',tip:'✅ 推荐操作：修疑难杂症 / 排查历史遗留问题\n❌ 禁止操作：简单问题不值得你今天出手',lucky:[{icon:'🔮',name:'透视'},{icon:'🥤',name:'气泡水'},{icon:'🌈',name:'全色'},{icon:'6',name:'No.6'}],grade:10,theme:3},
+  {type:'★★★★☆',sub:'[状态] CR通过率：100%',text:'✅ 代码写得规范又优雅\nReviewer直接Approve',detail:'今天的代码不仅能跑，还好看。命名清晰、结构合理、注释恰到好处。Reviewer看了心情愉悦，秒过不磨叽。',tip:'✅ 推荐操作：提MR / 代码重构\n❌ 禁止操作：写完不自己Review就提交',lucky:[{icon:'✅',name:'优雅'},{icon:'☕',name:'拿铁'},{icon:'💙',name:'蓝色'},{icon:'3',name:'No.3'}],grade:8,theme:1},
+  {type:'★★★★☆',sub:'[Buff] 架构感知力+80',text:'🏗️ 今天脑子里全是架构图\n系统设计信手拈来',detail:'模块怎么拆、接口怎么定、数据怎么流，今天想得特别清楚。适合做技术方案设计或者重大重构的决策。',tip:'✅ 推荐操作：技术方案设计 / 架构评审\n❌ 禁止操作：埋头写代码不想全局',lucky:[{icon:'🏗️',name:'架构'},{icon:'🫖',name:'花茶'},{icon:'💚',name:'绿色'},{icon:'2',name:'No.2'}],grade:8,theme:3},
+  {type:'★★★★☆',sub:'[技能冷却完毕] Git操作已就绪',text:'🌿 分支管理完美无冲突\nMerge一路绿灯',detail:'今天不管是rebase还是merge，都顺得不行。冲突？不存在的。多分支并行开发的节奏你今天拿捏得死死的。',tip:'✅ 推荐操作：合并分支 / 解决积压的冲突\n❌ 禁止操作：在main上直接改代码',lucky:[{icon:'🌿',name:'顺畅'},{icon:'🥤',name:'椰子水'},{icon:'💗',name:'粉色'},{icon:'5',name:'No.5'}],grade:8,theme:4},
+  {type:'★★★★☆',sub:'[称号解锁] Stack Overflow人形版',text:'🧠 同事遇到问题来问你\n你三句话就给解决了',detail:'今天脑子里全是解决方案。别人纠结半天的问题你一眼看出关键。多帮帮队友，今天你是全队的外挂。',tip:'✅ 推荐操作：帮同事排障 / 做技术分享\n❌ 禁止操作：戴着耳机谁都不理',lucky:[{icon:'🧠',name:'百科'},{icon:'🧋',name:'燕麦奶'},{icon:'🧡',name:'橙色'},{icon:'8',name:'No.8'}],grade:8,theme:4},
+  {type:'★★★★☆',sub:'[模式切换] 已进入心流状态',text:'🎧 戴上耳机世界消失\n只剩你和代码的二人世界',detail:'两小时写了平时半天的量，而且质量还高。今天就是传说中的心流状态——别让任何人打断你！',tip:'✅ 推荐操作：关掉消息专注写码\n❌ 禁止操作：开会 / 回消息 / 被打断',lucky:[{icon:'🎧',name:'心流'},{icon:'☕',name:'浓缩'},{icon:'❤️',name:'红色'},{icon:'11',name:'No.11'}],grade:9,theme:2},
+  {type:'★★★☆☆',sub:'[系统消息] 今日状态：稳定编译中',text:'⚙️ 按部就班写代码\n不出彩但也不出错',detail:'今天没有灵光乍现的时刻，但代码写得稳。适合做那些不需要太多创造力但必须做的事——单测、文档、代码规范化。',tip:'✅ 推荐操作：补单测 / 写技术文档\n❌ 禁止操作：挑战没把握的新技术',lucky:[{icon:'⚙️',name:'稳定'},{icon:'🥛',name:'牛奶'},{icon:'💚',name:'绿色'},{icon:'4',name:'No.4'}],grade:6,theme:3},
+  {type:'★★★☆☆',sub:'[提示] 有个新框架值得一看',text:'📦 今天适合学新东西\n看看有没有更好的轮子',detail:'技术栈是要更新的。花点时间看看最近出的新库新框架，也许能找到一个让你项目效率翻倍的好工具。',tip:'✅ 推荐操作：调研新技术 / 写技术Demo\n❌ 禁止操作：调研完不写总结',lucky:[{icon:'📦',name:'探索'},{icon:'🍵',name:'菊花茶'},{icon:'🤎',name:'棕色'},{icon:'10',name:'No.10'}],grade:6,theme:0},
+  {type:'★★★☆☆',sub:'[路径错误] 换个思路试试',text:'🔄 这个方案行不通？\n试试完全相反的思路',detail:'有时候卡住不是能力问题，是方向问题。今天如果卡了超过30分钟，果断换个思路。柳暗花明就在转弯处。',tip:'✅ 推荐操作：换方案 / 找同事讨论\n❌ 禁止操作：一条路走到黑',lucky:[{icon:'🔄',name:'转换'},{icon:'🧃',name:'果汁'},{icon:'💙',name:'湖蓝'},{icon:'12',name:'No.12'}],grade:6,theme:1},
+  {type:'★★★☆☆',sub:'[精度模式] 单测覆盖率检测已启用',text:'🧪 今天适合补测试\n代码覆盖率该提一提了',detail:'写业务代码是创造，写测试是守护。今天状态适合做这种需要耐心的事——把关键路径的单测补全。',tip:'✅ 推荐操作：补单测 / 集成测试\n❌ 禁止操作：觉得测试不重要就跳过',lucky:[{icon:'🧪',name:'覆盖'},{icon:'🫖',name:'玫瑰茶'},{icon:'💗',name:'樱粉'},{icon:'6',name:'No.6'}],grade:6,theme:2},
+  {type:'★★★☆☆',sub:'[预热中...] 下午手感更好',text:'✈️ 上午先看看代码\n下午再开始写',detail:'上午先读读要改的模块，理清逻辑关系。下午进入状态后效率会比上午高两倍。磨刀不误砍柴工。',tip:'✅ 推荐操作：上午读代码 / 下午写代码\n❌ 禁止操作：上午就硬写',lucky:[{icon:'📈',name:'渐入'},{icon:'☕',name:'卡布'},{icon:'💛',name:'暖黄'},{icon:'3',name:'No.3'}],grade:6,theme:4},
+  {type:'★★★☆☆',sub:'[成就解锁] 性能优化达人',text:'⚡ 把一个接口响应时间\n从3秒优化到300毫秒',detail:'今天对性能特别敏感。看到慢查询就想优化，看到N+1就想消灭。趁这个状态做一波性能调优！',tip:'✅ 推荐操作：性能优化 / 慢查询排查\n❌ 禁止操作：过早优化不重要的地方',lucky:[{icon:'⚡',name:'极速'},{icon:'🫖',name:'蜜桃茶'},{icon:'🩷',name:'珊瑚'},{icon:'8',name:'No.8'}],grade:6,theme:5},
+  {type:'★★☆☆☆',sub:'[日常任务] Code Review也是产出',text:'👀 今天帮队友Review代码\n顺便学到了新写法',detail:'Review不只是挑毛病，也是学习的好机会。看看别人怎么解决同样的问题，你可能会发现更好的思路。',tip:'✅ 推荐操作：认真CR / 给建设性意见\n❌ 禁止操作：LGTM一键通过',lucky:[{icon:'👀',name:'互审'},{icon:'🍵',name:'乌龙'},{icon:'💚',name:'薄荷'},{icon:'11',name:'No.11'}],grade:5,theme:3},
+  {type:'★★☆☆☆',sub:'[经验值+20] 填坑也是修炼',text:'🕳️ 又在填前人留下的坑\n但填完你就是最懂这块的人',detail:'维护祖传代码是痛苦的，但也是快速了解系统的捷径。今天填的每个坑，都在加深你对系统的理解。',tip:'✅ 推荐操作：修历史Bug / 重构老代码\n❌ 禁止操作：重写一遍（忍住）',lucky:[{icon:'🕳️',name:'填坑'},{icon:'🥤',name:'柠檬水'},{icon:'💛',name:'鹅黄'},{icon:'9',name:'No.9'}],grade:5,theme:4},
+  {type:'★★☆☆☆',sub:'[组队加成] 结对编程效率翻倍！',text:'👥 找个人一起写\n两个脑子比一个好使',detail:'今天适合结对编程。你写逻辑他盯Bug，或者你设计架构他写实现。两个人的思维碰撞出的代码质量更高。',tip:'✅ 推荐操作：结对编程 / 技术讨论\n❌ 禁止操作：闷头自己死磕',lucky:[{icon:'👥',name:'协作'},{icon:'🫖',name:'红茶'},{icon:'💙',name:'天青'},{icon:'2',name:'No.2'}],grade:5,theme:1},
+  {type:'★★☆☆☆',sub:'[副本难度] 技术债清理日',text:'🧹 趁今天把TODO注释\n清理一批',detail:'代码里到处是 TODO、FIXME、HACK...今天挑几个顺手清掉。技术债少一点，以后迭代快一点。',tip:'✅ 推荐操作：清TODO / 修FIXME\n❌ 禁止操作：加更多TODO进去',lucky:[{icon:'🧹',name:'清扫'},{icon:'☕',name:'手冲'},{icon:'💙',name:'深蓝'},{icon:'13',name:'No.13'}],grade:5,theme:0},
+  {type:'★★☆☆☆',sub:'[环境检测] 本地环境运行正常！',text:'🍀 今天环境没炸！\n珍惜这来之不易的稳定',detail:'Docker没崩、依赖没冲突、热更新正常工作。赶紧趁环境心情好多跑几个本地测试！',tip:'✅ 推荐操作：本地联调 / 跑测试\n❌ 禁止操作：手贱升级依赖版本',lucky:[{icon:'🍀',name:'稳定'},{icon:'🧋',name:'椰奶'},{icon:'🤍',name:'银白'},{icon:'5',name:'No.5'}],grade:5,theme:1},
+  {type:'★☆☆☆☆',sub:'[日常签到] 签到成功！经验+1',text:'🧱 不是每天都能写出\n优雅的代码',detail:'今天写出来的代码自己看着都觉得丑，但...它能跑。先保证功能正确，优雅的事以后再说。',tip:'✅ 推荐操作：先实现再优化\n❌ 禁止操作：为了优雅耽误进度',lucky:[{icon:'🧱',name:'务实'},{icon:'🥛',name:'酸奶'},{icon:'🤎',name:'原木'},{icon:'1',name:'No.1'}],grade:4,theme:3},
+  {type:'★☆☆☆☆',sub:'[进度条] ████████░░ 80% 编译中...',text:'🐛 Bug怎么修都修不完？\n先去喝杯水冷静一下',detail:'越着急越出错。今天遇到难搞的Bug别硬刚，先离开屏幕五分钟，回来可能一眼就看到问题所在。',tip:'✅ 推荐操作：适时休息 / 换换脑子\n❌ 禁止操作：连续Debug超过2小时不休息',lucky:[{icon:'🐛',name:'冷静'},{icon:'🍵',name:'白开水'},{icon:'💚',name:'草绿'},{icon:'10',name:'No.10'}],grade:4,theme:3},
+  {type:'★☆☆☆☆',sub:'[装备打造中] 工具链优化日',text:'🔧 磨刀不误砍柴工\n配置一下开发环境',detail:'IDE快捷键配了吗？常用代码片段存了吗？自动化脚本写了吗？今天花点时间优化工具链，以后每天省10分钟。',tip:'✅ 推荐操作：优化IDE / 写自动化脚本\n❌ 禁止操作：用最原始的方式干活',lucky:[{icon:'🔧',name:'工具'},{icon:'🫖',name:'普洱'},{icon:'🧡',name:'琥珀'},{icon:'8',name:'No.8'}],grade:4,theme:4},
+  {type:'★☆☆☆☆',sub:'[Loading...] 依赖正在安装...',text:'📦 npm install 的时间\n正好看看文档',detail:'等编译、等部署、等CI跑完...这些碎片时间加起来其实不少。用来看看官方文档或者技术博客刚刚好。',tip:'✅ 推荐操作：利用碎片时间学习\n❌ 禁止操作：等的时候刷手机',lucky:[{icon:'📦',name:'充电'},{icon:'🧃',name:'橙汁'},{icon:'💙',name:'晴空'},{icon:'6',name:'No.6'}],grade:4,theme:1},
+  {type:'★☆☆☆☆',sub:'[隐藏任务] 文档也是代码的一部分',text:'📖 README该更新了\n新来的同事看不懂你的项目',detail:'好的文档能救命——未来维护这个项目的人（可能就是三个月后的你自己）会感谢今天写文档的你。',tip:'✅ 推荐操作：更新README / 写部署文档\n❌ 禁止操作：觉得代码能自解释就不写',lucky:[{icon:'📖',name:'传承'},{icon:'🍵',name:'桂花茶'},{icon:'💛',name:'嫩黄'},{icon:'3',name:'No.3'}],grade:4,theme:5},
+  {type:'★☆☆☆☆',sub:'[倒计时] 下午状态会回来的',text:'☕ 上午代码写不动\n先看看别人的PR学学',detail:'上午没进入状态很正常。先看看同事的PR、读读开源项目的代码，等下午回过神来再开写。',tip:'✅ 推荐操作：读代码 / 学习\n❌ 禁止操作：硬写烂代码',lucky:[{icon:'☕',name:'慢热'},{icon:'🫖',name:'薄荷茶'},{icon:'💚',name:'翠绿'},{icon:'7',name:'No.7'}],grade:3,theme:3},
+  {type:'★☆☆☆☆',sub:'[剧透] 明天的你会感谢今天的坚持',text:'🌱 今天的苦逼Debug\n是明天的经验值',detail:'踩过的坑不会白踩。今天花三小时排查的问题，下次遇到你三分钟就能搞定。这就是成长。',tip:'✅ 推荐操作：记录踩坑笔记\n❌ 禁止操作：踩完坑就忘',lucky:[{icon:'🌱',name:'成长'},{icon:'☕',name:'摩卡'},{icon:'💜',name:'薰衣草'},{icon:'9',name:'No.9'}],grade:3,theme:0},
+  {type:'★☆☆☆☆',sub:'[预警系统] Merge前再检查一遍',text:'🦊 总觉得哪里漏了？\n再跑一遍测试确认',detail:'直觉告诉你这次提交有点心虚？相信它。再检查一遍边界条件、再跑一遍单测。宁可多花五分钟也不要线上出事。',tip:'✅ 推荐操作：多检查一遍 / 跑完整测试\n❌ 禁止操作：觉得"应该没问题"就提交',lucky:[{icon:'🦊',name:'谨慎'},{icon:'🧋',name:'芋泥'},{icon:'💗',name:'桃粉'},{icon:'5',name:'No.5'}],grade:3,theme:2},
+  {type:'★☆☆☆☆',sub:'[静音模式] 深度思考需要安静',text:'🦉 关掉Slack关掉邮件\n给自己一小时纯净写码时间',detail:'消息轰炸是效率杀手。今天试试番茄工作法——25分钟纯写码，5分钟看消息。你会发现效率提升不止一倍。',tip:'✅ 推荐操作：专注模式 / 番茄工作法\n❌ 禁止操作：每条消息都秒回',lucky:[{icon:'🦉',name:'专注'},{icon:'🍵',name:'铁观音'},{icon:'🤎',name:'深棕'},{icon:'2',name:'No.2'}],grade:3,theme:4},
+];
+
+fortuneDB.pm = [
+  {type:'★★★★★',sub:'[系统提示] 需求之神降临！',text:'🎯 今天写的PRD\n开发居然一次看懂了！',detail:'今天思路清晰到可怕，用户故事写得开发直呼"需求终于是人话了"。趁状态好把最复杂的那个需求理清楚！',tip:'✅ 推荐操作：写核心需求文档 / 拆用户故事\n❌ 禁止操作：摸鱼看竞品',lucky:[{icon:'🎯',name:'精准'},{icon:'🧋',name:'奶茶'},{icon:'💜',name:'紫色'},{icon:'7',name:'No.7'}],grade:10,theme:0},
+  {type:'★★★★★',sub:'[特殊事件] 老板的想法你全猜对了！',text:'🧠 读心术已激活！\n老板还没说完你就懂了',detail:'今天和老板、业务方对话效率拉满。他们模糊的想法经过你的翻译，变成了清晰可落地的需求。你就是最佳翻译官。',tip:'✅ 推荐操作：对齐高层需求 / 拿关键决策\n❌ 禁止操作：只听不问',lucky:[{icon:'🧠',name:'读心'},{icon:'☕',name:'拿铁'},{icon:'💙',name:'宝蓝'},{icon:'9',name:'No.9'}],grade:10,theme:1},
+  {type:'★★★★★',sub:'[战报] 需求评审全票通过！零反对！',text:'📋 评审会上所向披靡\n所有人都说"没问题"',detail:'今天不管是技术评审还是业务评审，你的方案逻辑自洽、考虑周全，没人能挑出毛病。快把最难的评审安排上！',tip:'✅ 推荐操作：安排需求评审 / 方案汇报\n❌ 禁止操作：把评审往后拖',lucky:[{icon:'👑',name:'全票'},{icon:'🍵',name:'龙井'},{icon:'✨',name:'金色'},{icon:'1',name:'No.1'}],grade:10,theme:2},
+  {type:'★★★★★',sub:'[公告] 今日灵感值已溢出！',text:'💡 脑子里全是好点子\n随便拎一个都是亮点功能',detail:'创意爆棚的一天！竞品没有的功能你想到了，用户没说出口的痛点你洞察到了。赶紧写下来，这些想法价值百万。',tip:'✅ 推荐操作：头脑风暴 / 产品规划\n❌ 禁止操作：只想不记',lucky:[{icon:'💡',name:'灵感'},{icon:'🥤',name:'气泡水'},{icon:'🌈',name:'全色'},{icon:'6',name:'No.6'}],grade:10,theme:3},
+  {type:'★★★★☆',sub:'[状态] 优先级感知力：MAX',text:'⚡ 什么先做什么后做\n今天判断力一流！',detail:'面对一堆需求不知道先做哪个？今天不会。P0P1P2排得明明白白，老板问起来你张口就来，逻辑清晰。',tip:'✅ 推荐操作：排优先级 / 规划迭代\n❌ 禁止操作：什么都想做',lucky:[{icon:'📊',name:'排序'},{icon:'☕',name:'美式'},{icon:'💙',name:'蓝色'},{icon:'3',name:'No.3'}],grade:8,theme:1},
+  {type:'★★★★☆',sub:'[Buff] 同理心+80 洞察力+50',text:'👥 今天特别能理解用户\n站在他们角度一想就通',detail:'用户调研、反馈分析今天做特别有感觉。你能从一句"不好用"里拆出三个具体问题，这就是产品经理的功力。',tip:'✅ 推荐操作：用户调研 / 反馈分析\n❌ 禁止操作：闭门造车不看数据',lucky:[{icon:'👥',name:'共情'},{icon:'🫖',name:'花茶'},{icon:'💚',name:'绿色'},{icon:'2',name:'No.2'}],grade:8,theme:3},
+  {type:'★★★★☆',sub:'[技能冷却完毕] 说服术已就绪',text:'🤝 今天谈什么都能谈成\n资源协调一路绿灯',detail:'跨部门协作的好日子！设计愿意改、开发愿意排、运营愿意推。趁今天把卡了很久的协作问题都推进一下。',tip:'✅ 推荐操作：跨部门协调 / 推进卡点\n❌ 禁止操作：自己扛不求助',lucky:[{icon:'🤝',name:'协作'},{icon:'🥤',name:'椰子水'},{icon:'💗',name:'粉色'},{icon:'5',name:'No.5'}],grade:8,theme:4},
+  {type:'★★★★☆',sub:'[称号解锁] 数据驱动达人',text:'📊 今天看数据特别有感觉\n趋势一眼就看出来了',detail:'DAU、留存、转化率...今天这些数字在你眼里不是冰冷的数据，而是一个个用户故事。数据背后的洞察信手拈来。',tip:'✅ 推荐操作：数据分析 / AB实验复盘\n❌ 禁止操作：拍脑袋做决策',lucky:[{icon:'📊',name:'洞察'},{icon:'🧋',name:'燕麦奶'},{icon:'🧡',name:'橙色'},{icon:'8',name:'No.8'}],grade:8,theme:4},
+  {type:'★★★★☆',sub:'[模式切换] 已进入深度思考模式',text:'🔭 今天适合想大事\n产品路线图该更新了',detail:'难得的深度思考日。日常被需求淹没，今天终于能跳出来看全局——半年后产品该长什么样？核心指标定什么？',tip:'✅ 推荐操作：更新路线图 / 制定季度目标\n❌ 禁止操作：陷在琐碎需求里',lucky:[{icon:'🔭',name:'远见'},{icon:'☕',name:'手冲'},{icon:'💙',name:'深蓝'},{icon:'11',name:'No.11'}],grade:9,theme:2},
+  {type:'★★★☆☆',sub:'[系统消息] 今日状态：平稳运行',text:'📝 按节奏来\n一个个需求稳稳推',detail:'今天没有灵光乍现，但胜在稳。跟进开发进度、确认设计稿、回复业务方问题，把日常做到位就是赢。',tip:'✅ 推荐操作：跟进进度 / 确认细节\n❌ 禁止操作：临时加大需求打乱节奏',lucky:[{icon:'📝',name:'有序'},{icon:'🥛',name:'牛奶'},{icon:'💚',name:'绿色'},{icon:'4',name:'No.4'}],grade:6,theme:3},
+  {type:'★★★☆☆',sub:'[提示] 竞品有新动作！',text:'🔍 今天适合看竞品\n说不定能抄到好作业',detail:'花点时间研究研究竞品最近的更新。不是要抄，是要知道市场在往哪走，你的产品差异化在哪。',tip:'✅ 推荐操作：竞品分析 / 市场调研\n❌ 禁止操作：看完不总结',lucky:[{icon:'🔍',name:'洞察'},{icon:'🍵',name:'菊花茶'},{icon:'🤎',name:'棕色'},{icon:'10',name:'No.10'}],grade:6,theme:0},
+  {type:'★★★☆☆',sub:'[路径优化] 发现更短路径！',text:'✂️ 需求太复杂？\n砍一刀 MVP 先上！',detail:'完美主义今天放一放。先把核心功能做出来验证，其他的迭代加。上线比完美更重要。',tip:'✅ 推荐操作：精简需求 / 定义MVP\n❌ 禁止操作：什么都想要一步到位',lucky:[{icon:'✂️',name:'精简'},{icon:'🧃',name:'果汁'},{icon:'💙',name:'湖蓝'},{icon:'12',name:'No.12'}],grade:6,theme:1},
+  {type:'★★★☆☆',sub:'[精度模式] 细节检查已启用',text:'🔬 今天适合抠细节\n交互稿该走查一遍了',detail:'按钮位置对不对？文案语气一致不？异常状态考虑了没？今天特别适合做这种细致活。',tip:'✅ 推荐操作：交互走查 / 文案审核\n❌ 禁止操作：只看大面不看细节',lucky:[{icon:'🔬',name:'精密'},{icon:'🫖',name:'玫瑰茶'},{icon:'💗',name:'樱粉'},{icon:'6',name:'No.6'}],grade:6,theme:2},
+  {type:'★★★☆☆',sub:'[预热中...] 灵感下午到货',text:'☕ 上午先处理杂事\n下午再想产品方案',detail:'上午脑子有点糊，先把邮件回了、会议记录整了。下午思路会清晰起来，再写方案事半功倍。',tip:'✅ 推荐操作：下午写方案\n❌ 禁止操作：上午硬想复杂问题',lucky:[{icon:'📈',name:'渐入'},{icon:'☕',name:'卡布'},{icon:'💛',name:'暖黄'},{icon:'3',name:'No.3'}],grade:6,theme:4},
+  {type:'★★★☆☆',sub:'[成就解锁] 用户代言人',text:'📢 今天替用户说了句话\n团队都觉得有道理',detail:'开发想省事简化流程的时候，你站出来说"但用户会困惑"。今天你的用户视角特别准，别怕坚持自己的判断。',tip:'✅ 推荐操作：坚持用户立场 / 推动体验优化\n❌ 禁止操作：为了不吵架就妥协',lucky:[{icon:'📢',name:'发声'},{icon:'🫖',name:'蜜桃茶'},{icon:'🩷',name:'珊瑚'},{icon:'8',name:'No.8'}],grade:6,theme:5},
+  {type:'★★☆☆☆',sub:'[日常任务] 推进就是生产力',text:'🏗️ 今天就是搬砖的\n但每块砖都有意义',detail:'写周报、更新需求池、回复各种"这个需求什么时候做"的消息。看似琐碎，但这就是产品经理的日常战场。',tip:'✅ 推荐操作：更新需求池 / 同步进度\n❌ 禁止操作：只想做"有创意"的事',lucky:[{icon:'🏗️',name:'搬砖'},{icon:'🍵',name:'乌龙'},{icon:'💚',name:'薄荷'},{icon:'11',name:'No.11'}],grade:5,theme:3},
+  {type:'★★☆☆☆',sub:'[经验值+15] 沟通就是超能力',text:'💬 今天多和人聊聊\n信息差里藏着机会',detail:'和运营聊聊用户反馈、和客服聊聊常见问题、和销售聊聊客户痛点。第一手信息比任何报告都值钱。',tip:'✅ 推荐操作：收集一线反馈\n❌ 禁止操作：只看二手数据报告',lucky:[{icon:'💬',name:'沟通'},{icon:'🥤',name:'柠檬水'},{icon:'💛',name:'鹅黄'},{icon:'9',name:'No.9'}],grade:5,theme:4},
+  {type:'★★☆☆☆',sub:'[组队加成] 和设计师心有灵犀！',text:'🎨 今天和设计配合默契\n你说"大概这种感觉"她就懂了',detail:'难得和设计师在同一频道！趁今天把那些说不清道不明的交互细节都对齐，减少后面改稿的来回。',tip:'✅ 推荐操作：和设计对齐方案\n❌ 禁止操作：等设计稿出来再提意见',lucky:[{icon:'🎨',name:'默契'},{icon:'🫖',name:'红茶'},{icon:'💙',name:'天青'},{icon:'2',name:'No.2'}],grade:5,theme:1},
+  {type:'★★☆☆☆',sub:'[副本难度] 挑战者模式已开启',text:'🧗 那个拖了很久的需求\n今天该啃一啃了',detail:'有些需求难不是因为复杂，而是因为各方利益没对齐。今天适合做这种"难而正确"的事——拉个会把各方拉齐。',tip:'✅ 推荐操作：推进复杂需求 / 拉齐各方\n❌ 禁止操作：继续拖着不处理',lucky:[{icon:'🧗',name:'攻坚'},{icon:'☕',name:'双倍浓缩'},{icon:'💙',name:'深蓝'},{icon:'13',name:'No.13'}],grade:5,theme:0},
+  {type:'★★☆☆☆',sub:'[环境检测] 会议室全部可预约！',text:'📅 今天会比较少\n难得有整块时间思考',detail:'没有被会议切碎的一天！赶紧利用整块时间做需要深度思考的事——产品规划、数据分析、方案设计。',tip:'✅ 推荐操作：深度工作 / 长文档输出\n❌ 禁止操作：主动约不必要的会',lucky:[{icon:'📅',name:'专注'},{icon:'🧋',name:'椰奶'},{icon:'🤍',name:'银白'},{icon:'5',name:'No.5'}],grade:5,theme:1},
+  {type:'★★☆☆☆',sub:'[下载中...] 行业认知 loading...',text:'📖 今天读篇行业报告\n比开三个会有用',detail:'偶尔跳出日常工作看看行业趋势，你会发现很多"为什么要做这个功能"的答案藏在行业大方向里。',tip:'✅ 推荐操作：读行业报告 / 学方法论\n❌ 禁止操作：只忙不学',lucky:[{icon:'📖',name:'充电'},{icon:'🥤',name:'冰美式'},{icon:'💙',name:'钴蓝'},{icon:'4',name:'No.4'}],grade:5,theme:1},
+  {type:'★☆☆☆☆',sub:'[日常签到] 签到成功！经验+1',text:'🧱 需求池该清理一下了\n过期的该关就关',detail:'积压了一堆"以后再说"的需求？今天花点时间清理一下，过期的关掉、优先级变了的重新排、缺信息的补上。',tip:'✅ 推荐操作：清理需求池 / 关过期需求\n❌ 禁止操作：继续堆不处理',lucky:[{icon:'🧱',name:'整理'},{icon:'🥛',name:'酸奶'},{icon:'🤎',name:'原木'},{icon:'1',name:'No.1'}],grade:4,theme:3},
+  {type:'★☆☆☆☆',sub:'[进度条] ████████░░ 80% 加载中...',text:'🐌 需求推不动？\n换个角度说服试试',detail:'开发说排不上、设计说来不及、业务方改了想法...今天推进阻力比较大。别硬推，换个说法换个角度，可能就通了。',tip:'✅ 推荐操作：换角度沟通 / 找替代方案\n❌ 禁止操作：硬刚发脾气',lucky:[{icon:'🐌',name:'耐心'},{icon:'🍵',name:'白开水'},{icon:'💚',name:'草绿'},{icon:'10',name:'No.10'}],grade:4,theme:3},
+  {type:'★☆☆☆☆',sub:'[装备打造中] 文档力+100',text:'📁 今天整理文档\n明天开会不慌',detail:'把散落在各处的需求文档、会议纪要、决策记录整理归档。下次有人问"这个当初怎么定的"，你三秒甩链接。',tip:'✅ 推荐操作：整理文档 / 归档决策\n❌ 禁止操作：记在脑子里不落文档',lucky:[{icon:'📁',name:'归档'},{icon:'🫖',name:'普洱'},{icon:'🧡',name:'琥珀'},{icon:'8',name:'No.8'}],grade:4,theme:4},
+  {type:'★☆☆☆☆',sub:'[Loading...] 思路正在重新加载',text:'🌊 想不清楚的时候\n出去走走再回来',detail:'对着PRD文档发呆半小时了？换个环境——去茶水间、下楼转转。好多产品灵感都是在散步时冒出来的。',tip:'✅ 推荐操作：换环境思考 / 和人聊聊\n❌ 禁止操作：死盯屏幕硬想',lucky:[{icon:'🌊',name:'放空'},{icon:'🧃',name:'橙汁'},{icon:'💙',name:'晴空'},{icon:'6',name:'No.6'}],grade:4,theme:1},
+  {type:'★☆☆☆☆',sub:'[隐藏任务] 技术债也是产品债',text:'🔧 今天和开发聊聊技术债\n别等爆了才处理',detail:'产品经理不只管功能需求。技术债积累到一定程度会影响迭代速度和稳定性，今天主动了解一下技术侧的痛点。',tip:'✅ 推荐操作：了解技术债 / 排技术优化\n❌ 禁止操作：觉得技术的事和产品无关',lucky:[{icon:'🔧',name:'底层'},{icon:'🍵',name:'桂花茶'},{icon:'💛',name:'嫩黄'},{icon:'3',name:'No.3'}],grade:4,theme:5},
+  {type:'★☆☆☆☆',sub:'[倒计时] 灵感正在赶来的路上',text:'☕ 今天先当个好的倾听者\n多听少说',detail:'不是每天都要输出。今天多听听用户怎么说、开发怎么想、老板怎么看。收集够了信息，明天输出质量翻倍。',tip:'✅ 推荐操作：倾听 / 收集信息\n❌ 禁止操作：急着下结论',lucky:[{icon:'☕',name:'沉淀'},{icon:'🫖',name:'薄荷茶'},{icon:'💚',name:'翠绿'},{icon:'7',name:'No.7'}],grade:3,theme:3},
+  {type:'★☆☆☆☆',sub:'[剧透] 下个版本会是你的高光',text:'🌱 今天种下的种子\n下个迭代就能开花',detail:'你今天做的调研、埋的数据点、理的需求框架，可能当下看不到效果。但下个版本回头看，全是今天打的底。',tip:'✅ 推荐操作：做长期铺垫的事\n❌ 禁止操作：只看短期数据',lucky:[{icon:'🌱',name:'播种'},{icon:'☕',name:'摩卡'},{icon:'💜',name:'薰衣草'},{icon:'9',name:'No.9'}],grade:3,theme:0},
+  {type:'★☆☆☆☆',sub:'[预警系统] 第六感：需求要变！',text:'🦊 总觉得哪里不对？\n相信你的直觉！',detail:'业务方说"就这样定了"，但你总觉得会改。记下你的担忧，大概率一周内会被验证。提前准备预案不吃亏。',tip:'✅ 推荐操作：准备Plan B / 记录风险点\n❌ 禁止操作：觉得"应该不会变"就不管',lucky:[{icon:'🦊',name:'预感'},{icon:'🧋',name:'芋泥'},{icon:'💗',name:'桃粉'},{icon:'5',name:'No.5'}],grade:3,theme:2},
+  {type:'★☆☆☆☆',sub:'[静音模式] 少开会多思考',text:'🦉 今天拒绝一个不必要的会\n省出一小时做正事',detail:'你的日历是不是被会议塞满了？今天勇敢拒绝一个"可以邮件说清楚"的会。你省下的时间比那个会值钱得多。',tip:'✅ 推荐操作：精简会议 / 异步沟通\n❌ 禁止操作：来者不拒全部参加',lucky:[{icon:'🦉',name:'断舍离'},{icon:'🍵',name:'铁观音'},{icon:'🤎',name:'深棕'},{icon:'2',name:'No.2'}],grade:3,theme:4},
+];
+
+fortuneDB.design = [
+  // ★★★★★ 五星 x2
+  {type:'★★★★★',sub:'[系统公告] 灵感大爆发',text:'今日设计之神附体，\n像素级对齐信手拈来。',detail:'今天你的审美在线、手感火热，不管是配色方案还是交互动效都能一稿过。适合挑战高难度视觉方案，甚至可以主动推翻之前不满意的设计，老板看了都想加鸡腿。趁状态好把设计系统的组件库也整理一波。',tip:'✅ 推荐操作：大胆提出全新视觉方案\n❌ 禁止操作：用"先这样吧"敷衍自己',lucky:[{icon:'🎨',name:'渐变色'},{icon:'✨',name:'毛玻璃'},{icon:'📐',name:'8px网格'},{icon:'☕',name:'冰美式'}],grade:10,theme:0},
+  {type:'★★★★★',sub:'[成就解锁] 一稿过达人',text:'甲方今日突然开窍，\n你说什么都是对的。',detail:'罕见的好日子！产品经理今天不会说"能不能再改改"，开发也不会问"这个动效能不能砍掉"。赶紧把积压的设计评审都安排上，一次性推过去。同时适合输出设计规范文档，今天写的东西质量极高。',tip:'✅ 推荐操作：集中安排设计评审会议\n❌ 禁止操作：偷偷摸鱼浪费天赐良机',lucky:[{icon:'💎',name:'Figma'},{icon:'🖼️',name:'Banner'},{icon:'🏆',name:'Red Dot奖'},{icon:'🍵',name:'抹茶拿铁'}],grade:10,theme:3},
+
+  // ★★★★ 四星 x3
+  {type:'★★★★',sub:'[任务完成] 走查无Bug',text:'设计还原度高达99%，\n前端小哥向你竖起拇指。',detail:'今天适合做设计走查，你的火眼金睛能发现1px的偏差。和前端同学的沟通也会很顺畅，对方愿意配合调整细节。建议把走查结果整理成文档，方便后续复查和沉淀经验。',tip:'✅ 推荐操作：逐页走查标注细节问题\n❌ 禁止操作：放过"差不多就行了"的心态',lucky:[{icon:'🔍',name:'放大镜'},{icon:'📏',name:'标尺工具'},{icon:'💻',name:'Retina屏'},{icon:'🥤',name:'柠檬水'}],grade:9,theme:1},
+  {type:'★★★★',sub:'[Buff加成] 配色之眼',text:'色彩敏感度今日MAX，\n调色板就是你的武器。',detail:'今天对颜色的感知力特别强，适合处理品牌配色升级、深色模式适配这类需要精准色感的工作。不过要注意无障碍对比度标准，别光顾着好看忘了WCAG规范。下午精力可能有所下降，重要配色决策上午搞定。',tip:'✅ 推荐操作：处理配色和品牌视觉升级\n❌ 禁止操作：忽略无障碍对比度要求',lucky:[{icon:'🌈',name:'HSL色轮'},{icon:'🎯',name:'色彩对比'},{icon:'👁️',name:'护眼模式'},{icon:'🍊',name:'橙子'}],grade:9,theme:4},
+  {type:'★★★★',sub:'[道具获得] 组件复用术',text:'今日组件库效率拉满，\nAuto Layout一把梭。',detail:'适合整理和优化组件库的一天，你会发现很多可以抽象复用的模式。用Figma的Auto Layout和Variants功能把常用组件封装好，能让后续的设计效率翻倍。也适合给团队做一次设计系统的分享。',tip:'✅ 推荐操作：封装高复用组件和样式\n❌ 禁止操作：每个页面都从零开始画',lucky:[{icon:'🧩',name:'组件库'},{icon:'📦',name:'Design Token'},{icon:'🔗',name:'实例链接'},{icon:'🧋',name:'奶茶'}],grade:8,theme:2},
+
+  // ★★★ 三星 x4
+  {type:'★★★',sub:'[日常任务] 平稳推进',text:'今日设计不功不过，\n稳扎稳打也是实力。',detail:'普通的一天，没有惊喜也没有意外。适合处理日常的设计需求和迭代优化，不建议尝试太激进的方案。把手头的切图和标注整理清楚，保证交付质量就是今天最大的胜利。',tip:'✅ 推荐操作：专注完成手头迭代任务\n❌ 禁止操作：在小需求上过度设计',lucky:[{icon:'📋',name:'需求文档'},{icon:'✏️',name:'铅笔工具'},{icon:'📁',name:'图层整理'},{icon:'🍞',name:'全麦面包'}],grade:6,theme:5},
+  {type:'★★★',sub:'[系统提示] 沟通日',text:'今天多听少画，\n先对齐需求再动手。',detail:'今天的创意产出可能不太稳定，但沟通运不错。适合和产品经理对齐需求细节、和开发讨论技术可行性。先把信息收集全了再动手，避免做无用功。如果有争议需求，今天谈比较容易达成共识。',tip:'✅ 推荐操作：主动约产品对齐需求\n❌ 禁止操作：闷头画图不问需求',lucky:[{icon:'💬',name:'评论区'},{icon:'📞',name:'腾讯会议'},{icon:'📝',name:'会议纪要'},{icon:'🥗',name:'沙拉'}],grade:6,theme:0},
+  {type:'★★★',sub:'[随机事件] 需求变更',text:'产品说就改一点点，\n你信了你就输了。',detail:'今天可能遇到需求调整，但幅度不会太大。保持平常心，先评估改动对整体设计的影响范围再动手。建议用版本管理记录每次改动，万一需要回退有据可查。和产品确认好优先级，别被临时插入的小需求打乱节奏。',tip:'✅ 推荐操作：版本管理记录每次改动\n❌ 禁止操作：不评估影响就直接改',lucky:[{icon:'🔄',name:'版本历史'},{icon:'⚖️',name:'优先级'},{icon:'📌',name:'Pin组件'},{icon:'🍜',name:'热干面'}],grade:6,theme:1},
+  {type:'★★★',sub:'[系统通知] 素材管理日',text:'今日适合收纳整理，\n你的图层比代码还乱。',detail:'设计文件的图层命名是不是"矩形 187"起步？今天适合整理文件结构、规范图层命名、清理无用的隐藏图层。虽然不出活，但整理好的文件以后交接不被骂，自己回头看也不懵。磨刀不误砍柴工。',tip:'✅ 推荐操作：规范图层命名和文件结构\n❌ 禁止操作：继续用"组 1""矩形 2"命名',lucky:[{icon:'🗂️',name:'文件夹'},{icon:'🏷️',name:'命名规范'},{icon:'🧹',name:'清理工具'},{icon:'🫖',name:'花茶'}],grade:6,theme:3},
+
+  // ★★ 二星 x3
+  {type:'★★',sub:'[警告] 审美疲劳',text:'今日灵感枯竭，\nDribbble刷了三小时没感觉。',detail:'创意低谷期，别勉强自己出方案了。今天适合做一些不太需要创意的执行工作，比如切图、标注、更新设计规范文档。如果一定要出新方案，建议参考竞品找灵感，别死磕原创。下班后看看展览或摄影作品充充电。',tip:'✅ 推荐操作：做执行类工作如切图标注\n❌ 禁止操作：在没灵感时硬出创意方案',lucky:[{icon:'😴',name:'午睡'},{icon:'📸',name:'摄影集'},{icon:'🎵',name:'白噪音'},{icon:'🍫',name:'巧克力'}],grade:5,theme:2},
+  {type:'★★',sub:'[Debuff] 沟通障碍',text:'你说留白是高级感，\n产品说这里空着浪费。',detail:'今天和产品/开发的沟通可能出现分歧，你觉得美的东西对方不买账。不要试图用"设计理论"说服他们，换成数据和用户反馈来论证更有效。实在谈不拢就先记录双方意见，改天找老板仲裁。',tip:'✅ 推荐操作：用数据和案例支撑设计决策\n❌ 禁止操作：用"你不懂设计"怼同事',lucky:[{icon:'📊',name:'数据报告'},{icon:'🤝',name:'握手言和'},{icon:'📧',name:'邮件确认'},{icon:'🍵',name:'菊花茶降火'}],grade:5,theme:4},
+  {type:'★★',sub:'[系统卡顿] Figma转圈圈',text:'电脑今日与你作对，\nFigma加载要等到地老天荒。',detail:'工具不给力的一天，Figma可能卡顿、插件报错、字体丢失。做好文件备份再操作，别在大文件上做高风险操作。如果实在卡得不行，考虑拆分文件或清理无用页面。保存！随时保存！',tip:'✅ 推荐操作：备份文件并清理冗余页面\n❌ 禁止操作：在未保存状态下做大改动',lucky:[{icon:'💾',name:'Ctrl+S'},{icon:'🔌',name:'重启大法'},{icon:'📤',name:'本地备份'},{icon:'🍦',name:'冰淇淋'}],grade:5,theme:5},
+
+  // ★ 一星 x3
+  {type:'★',sub:'[致命一击] 推倒重来',text:'领导看了你的设计说：\n"方向不太对，重新想想。"',detail:'今天的设计方案大概率要被毙掉，别太沮丧。先冷静分析反馈意见的核心诉求，很可能是需求理解偏差而非设计水平问题。建议拉上产品重新对齐目标，画低保真线框确认方向后再出高保真，避免二次返工。',tip:'✅ 推荐操作：低保真确认方向再出高保真\n❌ 禁止操作：赌气提出"要不你来画"',lucky:[{icon:'🗑️',name:'回收站'},{icon:'💪',name:'深呼吸'},{icon:'📖',name:'设计书籍'},{icon:'🍺',name:'下班啤酒'}],grade:4,theme:1},
+  {type:'★',sub:'[灾难预警] 切图地狱',text:'开发说你的设计稿没法切，\n间距标注前后矛盾。',detail:'今天容易在细节上翻车，标注可能出错、切图可能遗漏状态。仔细检查每个页面的间距和尺寸标注是否一致，空状态、加载态、异常态有没有补全。建议用Checklist逐项自查后再交付，不要给开发留下话柄。',tip:'✅ 推荐操作：用Checklist自查所有状态\n❌ 禁止操作：交付不完整的设计稿',lucky:[{icon:'🩹',name:'创可贴'},{icon:'📋',name:'自查表'},{icon:'🔢',name:'间距标注'},{icon:'🧃',name:'续命果汁'}],grade:3,theme:0},
+  {type:'★',sub:'[团灭警告] 像素灾难',text:'你精心设计的界面，\n在安卓千元机上惨不忍睹。',detail:'今天的设计可能在适配上遇到大麻烦——不同分辨率、不同系统版本的显示效果差异巨大。提前在多设备上预览效果，特别注意折叠屏、小屏手机和低端设备的表现。字号别小于12px，点击区域别小于44px。',tip:'✅ 推荐操作：多设备预览检查适配效果\n❌ 禁止操作：只在Mac上看效果就交付',lucky:[{icon:'📱',name:'测试机'},{icon:'🔧',name:'响应式布局'},{icon:'👓',name:'老花镜'},{icon:'🍔',name:'压力汉堡'}],grade:3,theme:2}
+];
+
+// ======================== 运维 ========================
+fortuneDB.ops = [
+  // ★★★★★ 五星 x2
+  {type:'★★★★★',sub:'[系统公告] 全线飘绿',text:'今日监控面板一片祥和，\nSLA稳如老狗。',detail:'罕见的太平日子！所有服务健康运行，告警静默，CPU和内存使用率都在安全线内。趁这个好时候做些技术债清理：升级过期的依赖、优化Dockerfile、完善监控告警规则。这种日子不多，珍惜。',tip:'✅ 推荐操作：清理技术债和升级依赖\n❌ 禁止操作：觉得没事就摸鱼不备份',lucky:[{icon:'💚',name:'全绿Dashboard'},{icon:'🛡️',name:'防火墙'},{icon:'📊',name:'Grafana'},{icon:'🍖',name:'烤肉'}],grade:10,theme:0},
+  {type:'★★★★★',sub:'[成就解锁] 上线零故障',text:'版本发布丝滑如德芙，\n回滚方案完全没用上。',detail:'今天适合做重要的发布上线！部署流程会异常顺利，CI/CD全程绿灯，灰度放量也没有异常指标。但请务必保持流程规范——该走的审批走完，该准备的回滚方案准备好，好运不是省略步骤的理由。',tip:'✅ 推荐操作：安排重要版本发布上线\n❌ 禁止操作：因为顺利就跳过回滚预案',lucky:[{icon:'🚀',name:'CI/CD'},{icon:'✅',name:'Pipeline'},{icon:'🎉',name:'发布成功'},{icon:'🍕',name:'庆功披萨'}],grade:10,theme:3},
+
+  // ★★★★ 四星 x3
+  {type:'★★★★',sub:'[Buff加成] 排障之眼',text:'今日Debug直觉敏锐，\n日志一翻就能定位根因。',detail:'排查问题的手感很好，适合处理积压的疑难杂症。看日志能快速抓到关键信息，Kubernetes的Pod状态变化也逃不过你的眼睛。建议把排障过程记录成文档，下次同类问题就有SOP了。',tip:'✅ 推荐操作：处理疑难问题并沉淀SOP\n❌ 禁止操作：只修不记下次还得重来',lucky:[{icon:'🔍',name:'grep大法'},{icon:'📋',name:'Kibana'},{icon:'🧠',name:'经验值'},{icon:'☕',name:'浓缩咖啡'}],grade:9,theme:1},
+  {type:'★★★★',sub:'[道具获得] 自动化神器',text:'今日脚本运势极佳，\n写啥跑啥一次过。',detail:'写自动化脚本的好日子！Shell脚本、Ansible Playbook、Terraform配置今天都会很顺。适合把重复的手工操作自动化，或者优化现有的部署流程。记得加好异常处理和日志输出，别写"能跑就行"的脚本。',tip:'✅ 推荐操作：编写自动化运维脚本\n❌ 禁止操作：写没有错误处理的脚本',lucky:[{icon:'🤖',name:'Ansible'},{icon:'📜',name:'Shell脚本'},{icon:'⚙️',name:'Terraform'},{icon:'🧋',name:'奶茶'}],grade:9,theme:4},
+  {type:'★★★★',sub:'[任务完成] 容量充足',text:'服务器资源绰绰有余，\n扩容申请领导秒批。',detail:'今天适合做容量规划和资源优化。服务器负载健康，可以趁机做压力测试评估系统瓶颈。如果需要申请新资源，今天提交大概率能批下来。也适合优化K8s的HPA策略和资源限制配置。',tip:'✅ 推荐操作：做压力测试和容量规划\n❌ 禁止操作：资源够用就不做容量预警',lucky:[{icon:'📈',name:'扩容'},{icon:'🖥️',name:'新服务器'},{icon:'📉',name:'成本优化'},{icon:'🥩',name:'牛排'}],grade:8,theme:2},
+
+  // ★★★ 三星 x4
+  {type:'★★★',sub:'[日常任务] 巡检日',text:'今日适合例行巡检，\n把该看的监控都过一遍。',detail:'平稳的一天，没有大风大浪。按照巡检清单逐项检查：证书有效期、磁盘空间、日志轮转、备份任务执行情况。这些日常工作虽然枯燥但非常重要，很多P0故障都是因为忽略了基础巡检。',tip:'✅ 推荐操作：按清单完成日常巡检\n❌ 禁止操作：跳过"看起来没问题"的项目',lucky:[{icon:'📝',name:'巡检清单'},{icon:'🔒',name:'SSL证书'},{icon:'💽',name:'磁盘空间'},{icon:'🍜',name:'牛肉面'}],grade:6,theme:5},
+  {type:'★★★',sub:'[系统提示] 文档日',text:'今天写运维文档吧，\n未来的你会感谢现在的你。',detail:'技术产出普通的一天，但适合补文档。把架构图更新一下、运维手册补充一下、告警处理流程整理一下。虽然写文档很痛苦，但半夜被叫起来处理故障时翻文档比翻代码快多了。',tip:'✅ 推荐操作：更新架构图和运维手册\n❌ 禁止操作：继续拖延"下次再写"',lucky:[{icon:'📖',name:'Wiki'},{icon:'🗺️',name:'架构图'},{icon:'📌',name:'Confluence'},{icon:'🫖',name:'铁观音'}],grade:6,theme:0},
+  {type:'★★★',sub:'[随机事件] 小告警',text:'告警群弹了几条消息，\n虚惊一场但也别大意。',detail:'今天可能有一些非紧急告警触发，大概率是阈值设置不够合理或者有抖动。不要直接静音，花时间分析一下是否需要调整告警阈值或者增加过滤规则。顺便检查告警通知渠道是否正常，别等真出事了才发现通知没发出去。',tip:'✅ 推荐操作：优化告警阈值和过滤规则\n❌ 禁止操作：直接静音告警不管了',lucky:[{icon:'🔔',name:'告警规则'},{icon:'📱',name:'通知渠道'},{icon:'📉',name:'阈值调整'},{icon:'🍵',name:'绿茶'}],grade:6,theme:1},
+  {type:'★★★',sub:'[系统通知] 权限审计',text:'今日适合清理权限，\n离职三个月的人还有root。',detail:'安全合规方面的好日子。检查一下服务器账号权限、数据库访问权限、堡垒机登录记录。那些离职/转岗同事的账号该回收就回收，过大的权限该收缩就收缩。安全无小事，别等出事了才想起来。',tip:'✅ 推荐操作：清理冗余账号和过大权限\n❌ 禁止操作：给所有人开sudo图省事',lucky:[{icon:'🔑',name:'密钥轮转'},{icon:'👥',name:'权限矩阵'},{icon:'🛡️',name:'堡垒机'},{icon:'🥤',name:'气泡水'}],grade:6,theme:3},
+
+  // ★★ 二星 x3
+  {type:'★★',sub:'[警告] 依赖过期',text:'今日不宜碰老系统，\n一更新就是依赖地狱。',detail:'老旧系统和过期依赖今天会特别作妖。如果非要升级，一定要在测试环境先跑一遍，千万别在生产环境直接yum update。锁好版本号，做好快照，准备好回滚方案再动手。',tip:'✅ 推荐操作：测试环境验证后再升级\n❌ 禁止操作：生产环境直接升级依赖',lucky:[{icon:'📦',name:'版本锁定'},{icon:'📸',name:'快照备份'},{icon:'🔙',name:'回滚方案'},{icon:'🍫',name:'提神巧克力'}],grade:5,theme:4},
+  {type:'★★',sub:'[Debuff] 网络抖动',text:'今日网络玄学上线，\n丢包率比你的发量还高。',detail:'网络状况不太好的一天，可能遇到间歇性超时、DNS解析异常或者CDN回源慢。避免做大规模的数据迁移和跨区域同步操作。重点关注网络监控指标，提前和网络组同步信息，准备好应急切换方案。',tip:'✅ 推荐操作：关注网络监控做好应急预案\n❌ 禁止操作：做大规模跨区域数据同步',lucky:[{icon:'🌐',name:'Ping'},{icon:'📡',name:'CDN'},{icon:'🔄',name:'DNS刷新'},{icon:'🧃',name:'维C饮料'}],grade:5,theme:2},
+  {type:'★★',sub:'[系统过载] 告警风暴',text:'告警群99+未读消息，\n打开一看全是同一个问题。',detail:'告警可能出现连锁反应，一个服务挂了带崩一串。保持冷静，先定位根因而不是逐个处理告警。检查服务依赖链路图，从最上游开始排查。处理完后记得做复盘，优化告警聚合规则避免下次被刷屏。',tip:'✅ 推荐操作：定位根因而非逐个处理告警\n❌ 禁止操作：慌张地同时改多个配置',lucky:[{icon:'🧯',name:'灭火器'},{icon:'🗺️',name:'依赖链路'},{icon:'🧘',name:'保持冷静'},{icon:'🍔',name:'压力汉堡'}],grade:5,theme:5},
+
+  // ★ 一星 x3
+  {type:'★',sub:'[致命一击] 删库跑路',text:'手一抖敲了rm -rf /，\n幸好有人拦住了你。',detail:'今天操作要十二分小心！高危命令执行前反复确认，特别是涉及删除、重启、配置变更的操作。建议所有变更都走工单审批，不要直接在终端敲命令。开启命令审计和操作确认二次弹窗，给自己的手指上保险。',tip:'✅ 推荐操作：所有变更走工单双人审批\n❌ 禁止操作：直接在生产执行高危命令',lucky:[{icon:'⚠️',name:'二次确认'},{icon:'🔐',name:'只读模式'},{icon:'📋',name:'变更工单'},{icon:'🍺',name:'下班啤酒'}],grade:4,theme:0},
+  {type:'★',sub:'[灾难预警] 硬盘告急',text:'磁盘使用率98%，\n日志文件比数据库还大。',detail:'存储空间危机！赶紧检查日志文件是否配置了轮转和过期清理，临时文件是否有人管。先紧急清理能删的东西腾出空间，然后排查是哪个服务在疯狂写日志。根本解决方案是配好logrotate和监控告警。',tip:'✅ 推荐操作：清理日志并配置轮转策略\n❌ 禁止操作：直接删/var/log下所有文件',lucky:[{icon:'💾',name:'磁盘扩容'},{icon:'🗜️',name:'日志压缩'},{icon:'🧹',name:'清理脚本'},{icon:'🧃',name:'续命果汁'}],grade:3,theme:1},
+  {type:'★',sub:'[团灭警告] 证书过期',text:'SSL证书昨天就过期了，\n用户看到的全是安全警告。',detail:'安全证书、域名、第三方API Key这些有时效性的东西今天可能集中爆雷。立即检查所有证书和密钥的有效期，把三个月内要过期的全部加到日历提醒。以后一定要配自动续期，靠人记是记不住的。',tip:'✅ 推荐操作：检查所有证书有效期配自动续期\n❌ 禁止操作：续完证书不验证生效状态',lucky:[{icon:'📅',name:'到期提醒'},{icon:'🔄',name:'自动续期'},{icon:'🔒',name:'Let\'s Encrypt'},{icon:'🍜',name:'泡面续命'}],grade:3,theme:2}
+];
+
+// ======================== 数据 ========================
+fortuneDB.data = [
+  // ★★★★★ 五星 x2
+  {type:'★★★★★',sub:'[系统公告] 数据大发现',text:'今日SQL手感火热，\n一条查询揭示惊人洞察。',detail:'数据分析的高光时刻！今天你的数据直觉特别准，写出来的SQL又快又准，跑出来的数据总能发现有价值的Insight。适合做深度分析、用户画像挖掘和AB实验复盘。赶紧把发现整理成报告，这可能是晋升答辩的好素材。',tip:'✅ 推荐操作：深入挖掘数据发现业务洞察\n❌ 禁止操作：发现了好数据不写报告',lucky:[{icon:'💎',name:'数据金矿'},{icon:'📊',name:'可视化'},{icon:'🧠',name:'洞察力'},{icon:'☕',name:'手冲咖啡'}],grade:10,theme:0},
+  {type:'★★★★★',sub:'[成就解锁] 报表全对',text:'本月数据报表零误差，\n财务和业务都竖起大拇指。',detail:'出报表的好日子！数据准确性极高，口径对齐顺利，各方核对都能通过。适合输出重要的经营分析报告和高管Dashboard。趁手感好把历史遗留的数据口径问题也理一理，统一指标定义文档。',tip:'✅ 推荐操作：输出重要报表和经营分析\n❌ 禁止操作：报表出了就不做二次校验',lucky:[{icon:'📈',name:'趋势图'},{icon:'✅',name:'数据校验'},{icon:'📋',name:'指标字典'},{icon:'🍰',name:'蛋糕'}],grade:10,theme:3},
+
+  // ★★★★ 四星 x3
+  {type:'★★★★',sub:'[Buff加成] SQL之神',text:'今日索引命中率100%，\n慢查询是什么不存在的。',detail:'写SQL的最佳状态！复杂的多表JOIN也能写得优雅高效，EXPLAIN一看全是Using index。适合优化历史遗留的慢查询，重构那些跑了半小时的ETL任务。记得把优化前后的性能对比记录下来，年终review有的写了。',tip:'✅ 推荐操作：优化慢SQL和ETL任务\n❌ 禁止操作：不加WHERE的全表扫描',lucky:[{icon:'⚡',name:'索引命中'},{icon:'🔍',name:'EXPLAIN'},{icon:'🏎️',name:'毫秒级响应'},{icon:'🧋',name:'珍珠奶茶'}],grade:9,theme:1},
+  {type:'★★★★',sub:'[道具获得] 可视化大师',text:'今日图表颜值在线，\n老板看了直呼专业。',detail:'数据可视化的好日子！不管是用Python画图还是搭BI仪表盘，今天的图表都会又清晰又好看。适合搭建业务监控大盘、优化数据报表的展示效果。注意图表要讲故事，不要堆数字，每张图都要有一个核心结论。',tip:'✅ 推荐操作：搭建BI仪表盘讲好数据故事\n❌ 禁止操作：一张图放十个指标没重点',lucky:[{icon:'📊',name:'Tableau'},{icon:'🎨',name:'配色方案'},{icon:'📉',name:'趋势洞察'},{icon:'🍊',name:'橙汁'}],grade:9,theme:4},
+  {type:'★★★★',sub:'[任务完成] 实验显著',text:'AB实验结果p<0.05，\n你的假设被完美验证。',detail:'做AB实验和统计分析的好时机！今天设计的实验分组合理、样本量充足、结果显著。适合推动有争议的业务决策，用数据说话比吵架管用。复盘时也要关注次要指标和长期影响，别只看核心转化率。',tip:'✅ 推荐操作：分析AB实验推动业务决策\n❌ 禁止操作：只看p值不看效应量',lucky:[{icon:'🧪',name:'实验分组'},{icon:'📐',name:'显著性'},{icon:'🎯',name:'转化率'},{icon:'🥛',name:'纯牛奶'}],grade:8,theme:2},
+
+  // ★★★ 三星 x4
+  {type:'★★★',sub:'[日常任务] 数据巡检',text:'今日适合检查数据质量，\n空值和异常值要留心。',detail:'常规的数据质量检查日。跑一遍数据完整性校验，看看关键表有没有空值激增、重复数据、格式异常。ETL任务的日志也过一遍，确认没有静默失败。数据质量是分析的基础，垃圾进垃圾出。',tip:'✅ 推荐操作：执行数据质量巡检\n❌ 禁止操作：跳过校验直接出报表',lucky:[{icon:'🔎',name:'数据质检'},{icon:'📝',name:'校验规则'},{icon:'🧹',name:'数据清洗'},{icon:'🍞',name:'吐司'}],grade:6,theme:5},
+  {type:'★★★',sub:'[系统提示] 口径对齐',text:'今天和业务对齐指标口径，\n原来你俩说的不是同一个DAU。',detail:'适合和业务方沟通指标定义的日子。拉齐DAU、留存率、转化率这些核心指标的计算口径，确保大家看到的数字是同一个东西。把口径说明写入指标字典文档，避免每次出报表都要解释一遍。',tip:'✅ 推荐操作：和业务对齐核心指标口径\n❌ 禁止操作：闷头算数不和业务确认',lucky:[{icon:'📖',name:'指标字典'},{icon:'💬',name:'沟通记录'},{icon:'🤝',name:'达成共识'},{icon:'🍵',name:'红茶'}],grade:6,theme:0},
+  {type:'★★★',sub:'[随机事件] 需求变更',text:'业务说"帮我加个维度"，\n你一看要改八张表。',detail:'临时的取数需求或者报表改动在所难免。先评估工作量再给排期，不要满口答应然后加班到凌晨。能用现有表和视图解决的就别新建，保持数据仓库的整洁。复杂需求建议走需求排期流程。',tip:'✅ 推荐操作：先评估工作量再给排期\n❌ 禁止操作：别人一催你就立刻开干',lucky:[{icon:'📅',name:'排期日历'},{icon:'⚖️',name:'优先级'},{icon:'📐',name:'评估模型'},{icon:'🍜',name:'加班泡面'}],grade:6,theme:1},
+  {type:'★★★',sub:'[系统通知] 存储优化',text:'数据仓库越来越胖了，\n该给表做做分区了。',detail:'适合做数仓优化的日子。检查大表是否做了分区、历史数据是否归档、冗余字段是否清理。优化存储不仅省钱，还能提升查询性能。顺便看看有没有跑了但没人用的定时任务在浪费资源。',tip:'✅ 推荐操作：优化分区策略和归档历史数据\n❌ 禁止操作：不管表多大都全量扫描',lucky:[{icon:'🗄️',name:'分区表'},{icon:'📦',name:'数据归档'},{icon:'💰',name:'成本节约'},{icon:'🫖',name:'普洱茶'}],grade:6,theme:3},
+
+  // ★★ 二星 x3
+  {type:'★★',sub:'[警告] 数据延迟',text:'ETL任务卡住了，\n离线数据比实际晚了8小时。',detail:'数据pipeline不太稳定的一天。ETL可能出现延迟、失败或者数据漂移。先检查上游数据源是否正常，再看任务调度有没有堆积。避免在数据不完整的情况下出报表，宁可推迟也不要出错误的数据给业务方。',tip:'✅ 推荐操作：检查ETL链路确保数据完整\n❌ 禁止操作：数据没跑完就出分析报告',lucky:[{icon:'⏰',name:'任务调度'},{icon:'🔗',name:'数据链路'},{icon:'🔄',name:'重跑任务'},{icon:'🍫',name:'巧克力'}],grade:5,theme:2},
+  {type:'★★',sub:'[Debuff] 口径打架',text:'你的数和财务的数对不上，\n差了0.01%但谁也不让步。',detail:'指标口径不一致的问题今天会凸显。你算的数和其他团队的数对不上，追溯发现是某个过滤条件不同。不要试图"调"到一样，要从数据源头找到差异原因并统一口径。记录好差异分析过程，避免下次重复劳动。',tip:'✅ 推荐操作：追溯数据源找到差异根因\n❌ 禁止操作：手动凑数让报表对上',lucky:[{icon:'🔢',name:'小数精度'},{icon:'📑',name:'差异分析'},{icon:'🤔',name:'追根溯源'},{icon:'🥤',name:'冰可乐'}],grade:5,theme:4},
+  {type:'★★',sub:'[系统卡顿] 查询超时',text:'你的SQL跑了两小时了，\nDBA发来一条关怀消息。',detail:'查询性能不好的一天，可能是数据量暴增也可能是查询没优化。先用EXPLAIN检查执行计划，看是不是漏了索引或者做了笛卡尔积。大查询拆成小批次处理，跑之前先估算数据量，别把生产库拖垮了。',tip:'✅ 推荐操作：优化查询并分批处理\n❌ 禁止操作：在生产库跑未优化的大查询',lucky:[{icon:'🐢',name:'慢查询'},{icon:'⏱️',name:'超时设置'},{icon:'🔧',name:'EXPLAIN'},{icon:'🧃',name:'西瓜汁'}],grade:5,theme:5},
+
+  // ★ 一星 x3
+  {type:'★',sub:'[致命一击] 数据泄露',text:'把测试数据发到了业务群，\n里面带着真实用户手机号。',detail:'数据安全红线日！今天操作数据要格外小心，脱敏、权限控制一个都不能少。分享数据前反复检查有没有PII信息，测试环境和生产环境的数据千万别搞混。出报表用脱敏后的数据，原始数据不要外传。',tip:'✅ 推荐操作：检查数据脱敏和权限控制\n❌ 禁止操作：未脱敏数据发到任何群',lucky:[{icon:'🔒',name:'数据脱敏'},{icon:'🛡️',name:'权限管控'},{icon:'🙈',name:'马赛克'},{icon:'🍺',name:'散心啤酒'}],grade:4,theme:0},
+  {type:'★',sub:'[灾难预警] 误删数据',text:'DROP TABLE的回车按下后，\n你才发现连的是生产库。',detail:'操作数据库要三思而后行的一天！DELETE和UPDATE一定要先加WHERE条件，DROP更是要四重确认。建议今天只做SELECT操作，写入操作找同事Double Check。生产库操作开启事务，随时准备ROLLBACK。',tip:'✅ 推荐操作：所有写操作开事务双人确认\n❌ 禁止操作：不带WHERE的DELETE/UPDATE',lucky:[{icon:'⚠️',name:'事务保护'},{icon:'💾',name:'备份恢复'},{icon:'👀',name:'双人复核'},{icon:'🍜',name:'压惊面条'}],grade:3,theme:1},
+  {type:'★',sub:'[团灭警告] 报表出错',text:'老板拿着你的报告问：\n"这个增长率是不是算反了？"',detail:'今天出的数据极易出错——可能是时间范围选错、分组维度搞混、环比同比算反。任何对外输出的数据至少自查三遍，关键数字找同事交叉验证。如果发现已经发出去的报表有误，第一时间修正并说明，越拖越被动。',tip:'✅ 推荐操作：报表出去前至少三遍自查\n❌ 禁止操作：发现数据错误不主动修正',lucky:[{icon:'🔢',name:'交叉验证'},{icon:'✏️',name:'纠错笔'},{icon:'📧',name:'勘误邮件'},{icon:'🍔',name:'安慰汉堡'}],grade:3,theme:2}
+];
+
+// ======================== 运营 ========================
+fortuneDB.operation = [
+  // ★★★★★ 五星 x2
+  {type:'★★★★★',sub:'[系统公告] 流量暴涨',text:'今日DAU突破新高，\n自然增长不花一分钱。',detail:'运营之神今日眷顾你！用户增长数据全面飘红，内容互动率和转化率都创新高。赶紧分析是哪个渠道或内容带来的爆发，把成功经验总结成方法论。趁热度还在追加运营动作，把流量转化为留存用户。',tip:'✅ 推荐操作：分析增长原因并追加运营动作\n❌ 禁止操作：流量来了不做留存转化',lucky:[{icon:'📈',name:'增长曲线'},{icon:'🔥',name:'热搜'},{icon:'👥',name:'新增用户'},{icon:'🍕',name:'庆功披萨'}],grade:10,theme:0},
+  {type:'★★★★★',sub:'[成就解锁] 活动大爆',text:'策划的活动ROI超预期300%，\n老板问你还有什么想法。',detail:'活动运营的高光时刻！参与率、转化率、分享率全面超预期。把活动的数据复盘做扎实——哪个环节转化好、哪个渠道效率高、用户反馈如何。这套方法论可以复制到下一次活动，也是述职的王牌素材。',tip:'✅ 推荐操作：做完整的活动数据复盘\n❌ 禁止操作：爆了就开心不做经验沉淀',lucky:[{icon:'🎯',name:'ROI'},{icon:'🏆',name:'超额完成'},{icon:'📊',name:'复盘报告'},{icon:'🍰',name:'庆祝蛋糕'}],grade:10,theme:3},
+
+  // ★★★★ 四星 x3
+  {type:'★★★★',sub:'[Buff加成] 内容爆款',text:'今日文案灵感爆棚，\n写啥啥爆款阅读量10万+。',detail:'内容创作的好日子！文案手感在线，能写出引发共鸣的好内容。适合写推文、拍短视频脚本、做活动宣传物料。注意把握平台调性，不同渠道用不同的内容风格。蹭热点要快但也要注意风险把控。',tip:'✅ 推荐操作：集中产出高质量内容\n❌ 禁止操作：不审核就发布蹭热点内容',lucky:[{icon:'✍️',name:'爆款文案'},{icon:'📱',name:'短视频'},{icon:'💬',name:'评论互动'},{icon:'☕',name:'灵感咖啡'}],grade:9,theme:1},
+  {type:'★★★★',sub:'[道具获得] 渠道加成',text:'今日渠道转化率翻倍，\n获客成本降到历史新低。',detail:'渠道推广效率很高的一天！不管是信息流投放还是KOL合作，今天的数据都很好看。适合加大表现好的渠道投入、谈新的合作资源。记得关注ROI而不只是曝光量，虚荣指标没有意义。',tip:'✅ 推荐操作：加大高效渠道投入\n❌ 禁止操作：只看曝光量不看转化率',lucky:[{icon:'📢',name:'渠道矩阵'},{icon:'💰',name:'低成本获客'},{icon:'🤝',name:'KOL合作'},{icon:'🧋',name:'奶茶'}],grade:9,theme:4},
+  {type:'★★★★',sub:'[任务完成] 用户好评如潮',text:'App Store评分涨到4.8，\n用户反馈都是小红花。',detail:'用户满意度很高的一天！用户评价和反馈都很正面，是收集好评截图和用户故事的好时机。把典型好评整理成Case Study，可以用于品牌宣传和产品迭代参考。同时也要关注少数差评，及时响应和处理。',tip:'✅ 推荐操作：整理好评素材用于品牌建设\n❌ 禁止操作：只看好评忽略差评反馈',lucky:[{icon:'⭐',name:'五星好评'},{icon:'💌',name:'用户故事'},{icon:'📸',name:'好评截图'},{icon:'🍊',name:'橙子'}],grade:8,theme:2},
+
+  // ★★★ 三星 x4
+  {type:'★★★',sub:'[日常任务] 数据看板日',text:'今天看看数据盘一盘，\nDAU稳住就是胜利。',detail:'平稳的一天，核心指标没有大波动。适合做日常数据复盘，看看各渠道的表现、用户留存趋势和活跃度变化。把本周的数据整理成周报，标记需要关注的异动指标。稳定也是一种能力。',tip:'✅ 推荐操作：整理数据做好日常复盘\n❌ 禁止操作：数据不看就说"挺好的"',lucky:[{icon:'📊',name:'数据看板'},{icon:'📝',name:'日报周报'},{icon:'📉',name:'趋势分析'},{icon:'🍵',name:'茉莉花茶'}],grade:6,theme:5},
+  {type:'★★★',sub:'[系统提示] 用户调研',text:'今天适合听听用户怎么说，\n别闭门造车了。',detail:'做用户调研和访谈的好日子。整理最近的用户反馈，找几个典型用户做深度访谈，了解他们的真实需求和痛点。用户说的不一定是对的，但一定值得听。调研结论整理成文档和产品同步。',tip:'✅ 推荐操作：安排用户访谈收集反馈\n❌ 禁止操作：用"我觉得"代替用户调研',lucky:[{icon:'🎤',name:'用户访谈'},{icon:'📋',name:'反馈表单'},{icon:'💡',name:'用户洞察'},{icon:'🥤',name:'果汁'}],grade:6,theme:0},
+  {type:'★★★',sub:'[随机事件] 竞品出招',text:'竞品上了新功能，\n老板让你今天出分析报告。',detail:'竞品有新动作，需要快速响应。别急着抄，先分析竞品的目标用户和策略逻辑。看看我们的差异化优势在哪里，哪些可以借鉴、哪些不用跟。一份有质量的竞品分析报告比慌张地"跟进"有价值得多。',tip:'✅ 推荐操作：做有深度的竞品分析\n❌ 禁止操作：看到竞品做什么就抄什么',lucky:[{icon:'🔍',name:'竞品分析'},{icon:'📊',name:'对比矩阵'},{icon:'🧠',name:'差异化'},{icon:'🍜',name:'思考面条'}],grade:6,theme:1},
+  {type:'★★★',sub:'[系统通知] 内容排期',text:'内容库快见底了，\n该批量备稿了。',detail:'内容储备不足了，今天适合集中做内容规划和批量生产。列好未来两周的选题计划，把能提前写的素材都准备好。有余力的话做一个内容日历，保持稳定的发布频率比偶尔爆款更重要。',tip:'✅ 推荐操作：制定内容日历批量备稿\n❌ 禁止操作：每天现想现写没有计划',lucky:[{icon:'📅',name:'内容日历'},{icon:'✍️',name:'选题库'},{icon:'📚',name:'素材库'},{icon:'🫖',name:'红茶'}],grade:6,theme:3},
+
+  // ★★ 二星 x3
+  {type:'★★',sub:'[警告] 留存下跌',text:'7日留存率跌了2个点，\n新增用户来了就跑。',detail:'留存指标下滑需要关注。分析是新用户质量问题还是产品体验问题：如果是获客渠道带来的低质流量就优化投放策略，如果是产品问题就赶紧推动修复。不要用"拉新"来掩盖留存问题，那是饮鸩止渴。',tip:'✅ 推荐操作：分析留存下跌原因定向修复\n❌ 禁止操作：用加大投放掩盖留存问题',lucky:[{icon:'📉',name:'留存漏斗'},{icon:'🔍',name:'归因分析'},{icon:'🩹',name:'体验修复'},{icon:'🍫',name:'安慰巧克力'}],grade:5,theme:2},
+  {type:'★★',sub:'[Debuff] 活动翻车',text:'精心策划的活动没人参加，\n奖品比参与人数还多。',detail:'活动效果不及预期的一天。冷静分析是曝光不够、门槛太高还是奖励不吸引人。如果还在活动期间，赶紧做补救调整——降低参与门槛、增加曝光渠道、优化活动文案。活动结束后做好复盘避免下次犯同样的错。',tip:'✅ 推荐操作：分析活动数据做紧急调整\n❌ 禁止操作：活动翻车不复盘下次继续翻',lucky:[{icon:'🔧',name:'紧急调整'},{icon:'📢',name:'加大曝光'},{icon:'📋',name:'复盘文档'},{icon:'🧃',name:'续命果汁'}],grade:5,theme:4},
+  {type:'★★',sub:'[系统过载] 投诉激增',text:'用户反馈群炸了99+，\n客服求你去安抚一下。',detail:'用户投诉集中爆发的一天，可能是产品Bug、活动规则不清晰或者服务体验差。第一时间了解投诉原因，准备统一回复口径，严重问题升级给产品和技术。处理投诉态度要好，用户的怒火需要被认真对待。',tip:'✅ 推荐操作：了解原因准备统一回复口径\n❌ 禁止操作：复制粘贴模板敷衍用户',lucky:[{icon:'🤝',name:'真诚道歉'},{icon:'📞',name:'客服热线'},{icon:'💐',name:'补偿方案'},{icon:'🍔',name:'压力汉堡'}],grade:5,theme:5},
+
+  // ★ 一星 x3
+  {type:'★',sub:'[致命一击] 推送事故',text:'Push推送发错了全量用户，\n凌晨3点吵醒了100万人。',detail:'推送/群发操作的高危日！发送任何触达用户的消息前要三重确认——内容对不对、人群对不对、时间对不对。先小范围测试再全量发送，千万别在测试环境写完直接到生产环境全量推。出了事第一时间发致歉通知。',tip:'✅ 推荐操作：推送前小范围测试再全量\n❌ 禁止操作：不测试直接全量推送',lucky:[{icon:'⚠️',name:'三重确认'},{icon:'👥',name:'灰度发送'},{icon:'📱',name:'测试设备'},{icon:'🍺',name:'压惊啤酒'}],grade:4,theme:0},
+  {type:'★',sub:'[灾难预警] KPI爆红',text:'本月KPI完成率23%，\n老板约你周五聊聊。',detail:'KPI告急的至暗时刻。别慌，先冷静分析哪些指标还能冲、哪些确实没救了。把剩余时间集中投入ROI最高的方向，同时准备好客观的情况说明——外部环境、资源限制都要如实说明，但也要拿出下个月的改进方案。',tip:'✅ 推荐操作：聚焦高ROI方向冲刺+准备说明\n❌ 禁止操作：躺平等死或刷虚假数据',lucky:[{icon:'🎯',name:'聚焦重点'},{icon:'📋',name:'改进方案'},{icon:'💪',name:'最后冲刺'},{icon:'🍜',name:'加班泡面'}],grade:3,theme:1},
+  {type:'★',sub:'[团灭警告] 负面舆情',text:'品牌被挂上了热搜，\n公关同事血压飙升中。',detail:'舆情危机日！不管是产品问题、营销翻车还是用户投诉被放大，第一原则是快速响应、真诚沟通。准备好声明，和公关、法务对齐口径。不要在社交媒体上和用户互怼，更不要删评论，越删越炸。诚恳认错比甩锅有用。',tip:'✅ 推荐操作：快速响应准备统一声明\n❌ 禁止操作：删评论/和用户对骂/甩锅',lucky:[{icon:'🛡️',name:'危机公关'},{icon:'📝',name:'声明模板'},{icon:'🤐',name:'少说多做'},{icon:'🍵',name:'降火凉茶'}],grade:3,theme:2}
+];
+
+// ======================== 风控 ========================
+fortuneDB.risk = [
+  // ★★★★★ 五星 x2
+  {type:'★★★★★',sub:'[系统公告] 风控全绿',text:'今日风险指标全线达标，\n误杀率和漏杀率完美平衡。',detail:'风控系统运行完美的一天！策略准确率极高，误杀率低于预期，漏杀率也在可控范围内。适合做策略回顾和效果复盘，把表现好的规则沉淀下来。也可以趁状态好优化边界Case的处理逻辑。',tip:'✅ 推荐操作：复盘优秀策略沉淀经验\n❌ 禁止操作：指标好就不做日常巡检',lucky:[{icon:'💚',name:'全绿面板'},{icon:'⚖️',name:'完美平衡'},{icon:'📊',name:'策略报告'},{icon:'🍖',name:'庆功烤肉'}],grade:10,theme:0},
+  {type:'★★★★★',sub:'[成就解锁] 精准拦截',text:'新策略上线精准命中黑产，\n拦截率99.7%零误杀。',detail:'风控策略的高光时刻！新上线的规则精准拦截了异常行为，误杀率几乎为零。把这个策略的设计思路、特征工程和阈值选择过程详细记录下来，这就是团队最有价值的知识资产。趁势优化其他薄弱环节的策略。',tip:'✅ 推荐操作：记录策略设计过程沉淀方法论\n❌ 禁止操作：骄傲自满不做持续优化',lucky:[{icon:'🎯',name:'精准命中'},{icon:'🛡️',name:'实时拦截'},{icon:'📋',name:'策略文档'},{icon:'🍰',name:'蛋糕庆祝'}],grade:10,theme:3},
+
+  // ★★★★ 四星 x3
+  {type:'★★★★',sub:'[Buff加成] 规则引擎超载',text:'今日规则引擎性能拉满，\n毫秒级决策稳如磐石。',detail:'规则引擎运行状态极佳，延迟低、吞吐高。适合上线新的风控规则或调整现有策略的阈值。建议把待观察的实验规则从灰度切到全量，同时压测一下系统在流量高峰时的承载能力。',tip:'✅ 推荐操作：上线新规则或调整策略阈值\n❌ 禁止操作：不做灰度验证直接全量生效',lucky:[{icon:'⚡',name:'低延迟'},{icon:'🔧',name:'规则引擎'},{icon:'📈',name:'吞吐量'},{icon:'☕',name:'美式咖啡'}],grade:9,theme:1},
+  {type:'★★★★',sub:'[道具获得] 特征工程术',text:'今日特征构造灵感爆发，\nAUC直接涨了5个点。',detail:'做模型和特征工程的好日子！对数据的感觉特别好，能发现有区分度的新特征。适合优化风控模型的特征集、尝试新的组合特征或时序特征。记得做好特征重要性分析，去掉冗余特征保持模型简洁。',tip:'✅ 推荐操作：优化特征工程提升模型效果\n❌ 禁止操作：疯狂加特征不做重要性分析',lucky:[{icon:'🧪',name:'特征实验'},{icon:'📐',name:'AUC提升'},{icon:'🧠',name:'数据直觉'},{icon:'🧋',name:'奶茶补给'}],grade:9,theme:4},
+  {type:'★★★★',sub:'[任务完成] 合规审核通过',text:'合规检查一次性通过，\n审计同事罕见地微笑了。',detail:'合规相关工作顺利的一天！不管是内部审计还是外部合规检查，今天准备的材料都会得到认可。适合推进合规整改项的落地、更新风控策略文档和操作手册。把审计发现的改进建议认真落实，别等下次检查再补。',tip:'✅ 推荐操作：推进合规整改和文档更新\n❌ 禁止操作：审计过了就把改进建议忘了',lucky:[{icon:'✅',name:'合规通过'},{icon:'📖',name:'操作手册'},{icon:'🏛️',name:'审计报告'},{icon:'🥩',name:'牛排犒劳'}],grade:8,theme:2},
+
+  // ★★★ 三星 x4
+  {type:'★★★',sub:'[日常任务] 策略巡检',text:'今天review一下在跑的策略，\n有些规则该退休了。',detail:'例行的策略巡检日。检查各条规则的触发率、准确率和覆盖率，看哪些规则已经失效需要下线，哪些规则的阈值需要调整。风控策略需要持续优化，黑产的手法一直在变，你的规则也不能一成不变。',tip:'✅ 推荐操作：评估并淘汰失效策略\n❌ 禁止操作：只管上线不管下线',lucky:[{icon:'📋',name:'策略清单'},{icon:'🔍',name:'效果评估'},{icon:'🔄',name:'策略迭代'},{icon:'🍵',name:'绿茶'}],grade:6,theme:5},
+  {type:'★★★',sub:'[系统提示] Case分析日',text:'今天仔细看看漏过去的Case，\n每个漏杀背后都有故事。',detail:'适合做Bad Case分析的日子。把最近漏杀和误杀的Case拿出来逐个分析，找到策略的盲区和过杀点。每个Case都是优化策略的线索，特别关注那些"差一点就拦住了"的Case，往往只需要微调阈值就能覆盖。',tip:'✅ 推荐操作：逐个分析漏杀和误杀Case\n❌ 禁止操作：只看数字不看具体Case',lucky:[{icon:'🔎',name:'Case详情'},{icon:'📊',name:'分布分析'},{icon:'💡',name:'策略灵感'},{icon:'🍜',name:'热汤面'}],grade:6,theme:0},
+  {type:'★★★',sub:'[随机事件] 新型手法',text:'黑产换了新套路，\n你的规则暂时还没覆盖到。',detail:'发现了新型的欺诈或作弊手法，现有规则没有完全覆盖。先评估影响范围和损失程度，如果紧急就先用临时规则做拦截，再设计更完善的长期方案。把新手法的特征记录下来，更新风险情报库。',tip:'✅ 推荐操作：快速制定临时拦截策略\n❌ 禁止操作：等做好完美方案再行动',lucky:[{icon:'🕵️',name:'情报收集'},{icon:'🚨',name:'临时规则'},{icon:'📝',name:'手法记录'},{icon:'🥤',name:'冰可乐'}],grade:6,theme:1},
+  {type:'★★★',sub:'[系统通知] 阈值调优',text:'误杀率又被业务方投诉了，\n该调调阈值了。',detail:'风控的核心矛盾日——安全和体验的平衡。业务方觉得拦截太严影响转化，安全团队又担心放松后风险增加。今天适合拉上双方一起看数据，找到一个各方能接受的阈值。用数据说话比打嘴仗有效。',tip:'✅ 推荐操作：用数据找到安全和体验的平衡点\n❌ 禁止操作：一刀切放松所有拦截规则',lucky:[{icon:'⚖️',name:'阈值平衡'},{icon:'📉',name:'误杀分析'},{icon:'🤝',name:'业务共识'},{icon:'🫖',name:'养生茶'}],grade:6,theme:3},
+
+  // ★★ 二星 x3
+  {type:'★★',sub:'[警告] 误杀飙升',text:'正常用户被批量拦截，\n客诉电话打爆了。',detail:'策略误杀率异常升高的一天！可能是新规则上线后边界Case没覆盖好，也可能是数据源出了问题导致特征异常。先紧急排查是哪条规则导致的，必要时临时下线或放宽阈值，但要同步评估放宽后的风险敞口。',tip:'✅ 推荐操作：定位误杀规则并紧急调整\n❌ 禁止操作：不排查原因就全部放行',lucky:[{icon:'🩹',name:'紧急修复'},{icon:'🔍',name:'规则定位'},{icon:'📞',name:'安抚客户'},{icon:'🍫',name:'压力巧克力'}],grade:5,theme:2},
+  {type:'★★',sub:'[Debuff] 数据源异常',text:'风控模型用的特征数据断了，\n决策引擎在盲人摸象。',detail:'上游数据源出现延迟或异常，导致风控决策缺少关键特征。先检查是否有兜底策略，在数据恢复之前用静态规则临时替代模型决策。联系数据团队确认恢复时间，做好数据恢复后的补判逻辑。',tip:'✅ 推荐操作：启用兜底规则并联系数据团队\n❌ 禁止操作：数据缺失时继续用模型决策',lucky:[{icon:'🔗',name:'数据链路'},{icon:'🛟',name:'兜底策略'},{icon:'📡',name:'数据恢复'},{icon:'🧃',name:'提神饮料'}],grade:5,theme:4},
+  {type:'★★',sub:'[系统卡顿] 引擎延迟',text:'风控决策接口P99飙到3秒，\n用户等得想卸载App了。',detail:'规则引擎性能下降，决策延迟显著增加。排查是规则数量过多、特征计算超时还是系统资源不足。紧急情况下可以临时降级非核心规则，保证关键链路的响应速度。后续需要做规则瘦身和性能优化。',tip:'✅ 推荐操作：降级非核心规则保障关键链路\n❌ 禁止操作：延迟高就直接关掉风控',lucky:[{icon:'⏱️',name:'P99延迟'},{icon:'🏎️',name:'性能优化'},{icon:'🧹',name:'规则瘦身'},{icon:'🍔',name:'快速汉堡'}],grade:5,theme:5},
+
+  // ★ 一星 x3
+  {type:'★',sub:'[致命一击] 策略被绕过',text:'黑产找到了规则漏洞，\n一夜之间薅走百万。',detail:'风控策略被绕过的紧急情况！立即启动应急响应：冻结涉事账号、堵上规则漏洞、评估损失范围。同时排查是规则逻辑有缺陷还是被人逆向了规则特征。事后做完整的根因分析和策略加固。',tip:'✅ 推荐操作：启动应急响应堵漏止损\n❌ 禁止操作：慢慢排查不紧急处理',lucky:[{icon:'🚨',name:'应急响应'},{icon:'🔒',name:'账号冻结'},{icon:'🔧',name:'规则修补'},{icon:'🍺',name:'压惊啤酒'}],grade:4,theme:0},
+  {type:'★',sub:'[灾难预警] 合规红线',text:'审计发现了合规漏洞，\n整改通知措辞很严厉。',detail:'合规问题暴露的高压日。不管是数据隐私、反洗钱还是用户权益保护，合规红线碰不得。立即对照整改要求逐项排查和修复，涉及系统改造的提交紧急需求。主动向领导汇报进展，不要试图掩盖或拖延。',tip:'✅ 推荐操作：逐项排查立即启动整改\n❌ 禁止操作：掩盖问题或拖延整改',lucky:[{icon:'⚠️',name:'整改通知'},{icon:'📋',name:'合规清单'},{icon:'⏰',name:'截止日期'},{icon:'🍜',name:'加班泡面'}],grade:3,theme:1},
+  {type:'★',sub:'[团灭警告] 资损事故',text:'风控系统宕机两小时，\n黑产趁虚而入造成重大资损。',detail:'最严重的情况——风控系统故障导致无防护窗口期。事后需要做的：统计窗口期内所有交易并做人工审核、评估实际资损金额、编写事故报告。然后设计高可用方案——主备切换、降级策略、兜底规则，确保单点故障不会再导致全线失守。',tip:'✅ 推荐操作：统计损失+设计高可用方案\n❌ 禁止操作：写完事故报告就觉得完事了',lucky:[{icon:'💔',name:'事故报告'},{icon:'🏗️',name:'高可用'},{icon:'🛡️',name:'兜底策略'},{icon:'🧃',name:'续命饮料'}],grade:3,theme:2}
+];
+
+
+// 工具
+const weekDays=['周日','周一','周二','周三','周四','周五','周六'];
+function getTodayStr(){const d=new Date();return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+function getDailySeed(){const d=new Date();return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();}
+function hashSeed(s){let h=s;h=((h>>16)^h)*0x45d9f3b;h=((h>>16)^h)*0x45d9f3b;h=(h>>16)^h;return Math.abs(h);}
+function getDailyFortune(rid){const l=fortuneDB[rid]||fortuneDB.test;const seed=hashSeed(getDailySeed()*31+rid.split('').reduce((a,c)=>a+c.charCodeAt(0),0));return l[seed%l.length];}
+function getStreak(){const h=JSON.parse(localStorage.getItem('fortuneHistory')||'[]');if(!h.length)return 0;let s=0;const t=new Date();for(let i=0;i<365;i++){const d=new Date(t);d.setDate(d.getDate()-i);const ds=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;if(h.some(x=>x.date===ds))s++;else break;}return s;}
+function saveFortune(f,rid){const h=JSON.parse(localStorage.getItem('fortuneHistory')||'[]');const t=getTodayStr();if(!h.some(x=>x.date===t)){h.unshift({date:t,type:f.type,sub:f.sub,text:f.text,grade:f.grade,role:rid});if(h.length>100)h.pop();localStorage.setItem('fortuneHistory',JSON.stringify(h));}}
+
+// 显示页面
+function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');}
+
+// 日期
+const now=new Date();
+const dateStr=`${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日 ${weekDays[now.getDay()]}`;
+document.getElementById('dateText').textContent=dateStr;
+document.getElementById('statusDate').textContent=dateStr;
+
+// 角色
+let currentRole=localStorage.getItem('fortuneRole')||null;
+let currentFortune=null;
+const roleGrid=document.getElementById('roleGrid');
+roles.forEach(r=>{const c=document.createElement('div');c.className='role-card';c.innerHTML=`<div class="icon">${r.icon}</div><div class="name">${r.name}</div><div class="desc">${r.desc}</div>`;c.addEventListener('click',()=>selectRole(r.id));roleGrid.appendChild(c);});
+
+function selectRole(rid){
+  currentRole=rid;
+  if(document.getElementById('rememberRole').checked)localStorage.setItem('fortuneRole',rid);
+  const r=roles.find(x=>x.id===rid);
+  document.getElementById('mainTitle').textContent=`🎰 今日运势 - ${r.name}（${r.desc}）`;
+  document.getElementById('resultTitle').textContent=`📋 占卜结果 - ${r.name}`;
+  document.getElementById('statusRole').textContent=`${r.icon} ${r.name}`;
+  document.getElementById('streakCounter').textContent=`🔥 连续打卡: ${getStreak()} 天`;
+  showPage('mainPage');
+  const th=JSON.parse(localStorage.getItem('fortuneHistory')||'[]');
+  if(th.some(h=>h.date===getTodayStr()))document.getElementById('hintText').textContent='⚠️ 今天已抽过！再点可查看结果';
+}
+if(currentRole)selectRole(currentRole);
+
+// 抽签
+document.getElementById('drawBtn').addEventListener('click',()=>{
+  if(!currentRole)return;
+  const f=getDailyFortune(currentRole);
+  currentFortune=f;
+  saveFortune(f,currentRole);
+  document.getElementById('fortuneNum').textContent=`[ 签号 No.${(hashSeed(getDailySeed())%99)+1} | ${getTodayStr()} ]`;
+  document.getElementById('fortuneType').textContent=f.type;
+  document.getElementById('fortuneSub').textContent=f.sub;
+  document.getElementById('fortuneText').textContent=f.text;
+  document.getElementById('fortuneDetail').textContent=f.detail;
+  document.getElementById('fortuneTip').textContent=f.tip;
+  document.getElementById('luckyBox').innerHTML=f.lucky.map(l=>`<div class="lucky-item"><div class="licon">${l.icon}</div><div>${l.name}</div></div>`).join('');
+  document.getElementById('streakCounter').textContent=`🔥 连续打卡: ${getStreak()} 天`;
+  showPage('resultPage');
+});
+
+// 返回
+function goBack(){showPage('mainPage');}
+document.getElementById('resultClose').addEventListener('click',goBack);
+document.getElementById('switchRoleBtn').addEventListener('click',()=>{showPage('rolePage');});
+
+// 复制
+function copyFortune(){if(!currentFortune||!currentRole)return;const f=currentFortune;const r=roles.find(x=>x.id===currentRole);const t=`【今日运势】${r.name}\n${f.type} ${f.sub}\n\n${f.text}\n\n${f.detail}\n\n${f.tip}`;navigator.clipboard.writeText(t).then(()=>alert('已复制到剪贴板！'));}
+
+// 历史
+document.getElementById('historyBtn').addEventListener('click',()=>{
+  const h=JSON.parse(localStorage.getItem('fortuneHistory')||'[]');
+  const c=document.getElementById('historyContent');
+  if(!h.length){c.innerHTML='<p style="color:#808080;text-align:center">暂无记录...<br>快去抽一签吧！</p>';
+  }else{
+    let html=`<p style="font-size:11px;color:#808080;margin-bottom:8px">共 ${h.length} 条记录 | 连续打卡 ${getStreak()} 天</p>`;
+    html+=h.map(x=>{const r=roles.find(ro=>ro.id===x.role)||{icon:'🐛',name:'测试'};return`<div class="history-row"><b>${x.date}</b> [${r.icon}${r.name}] ${x.type} - ${(x.text||'').replace(/\n/g,' ')}</div>`;}).join('');
+    c.innerHTML=html;
+  }
+  document.getElementById('historyOverlay').classList.add('show');
+});
+document.getElementById('historyClose').addEventListener('click',()=>{document.getElementById('historyOverlay').classList.remove('show');});
+document.getElementById('historyOverlay').addEventListener('click',(e)=>{if(e.target.id==='historyOverlay')document.getElementById('historyOverlay').classList.remove('show');});
+</script>
+</body>
+</html>
