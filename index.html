@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>今日运势 - 欢迎来到互联网！</title>
+<title>上班前先摇一卦 | 打工人赛博占卜</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; border-radius:0 !important; }
   body { min-height:100vh; font-family:"MS Sans Serif","Segoe UI",Tahoma,Geneva,Verdana,sans-serif; font-size:14px; color:#000; background-color:#c0c0c0; background-image:linear-gradient(45deg,#b8b8b8 25%,transparent 25%),linear-gradient(-45deg,#b8b8b8 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#b8b8b8 75%),linear-gradient(-45deg,transparent 75%,#b8b8b8 75%); background-size:4px 4px; background-position:0 0,0 2px,2px -2px,-2px 0; }
@@ -84,13 +84,17 @@
   .statusbar { position:fixed; bottom:0; left:0; right:0; background:#c0c0c0; border-top:2px solid; border-color:#fff #808080 #808080 #fff; padding:3px 8px; display:flex; justify-content:space-between; align-items:center; font-size:12px; z-index:10; }
   .statusbar .segment { border:2px solid; border-color:#808080 #fff #fff #808080; padding:2px 8px; background:#c0c0c0; }
   @media(max-width:520px) { .role-grid{grid-template-columns:repeat(2,1fr)} .fortune-type{font-size:32px} }
+  /* 摇签动画 */
+  .shake { animation:shakeIt 0.3s ease-in-out infinite; display:inline-block; }
+  @keyframes shakeIt { 0%,100%{transform:rotate(0deg)} 25%{transform:rotate(-15deg)} 75%{transform:rotate(15deg)} }
+  .drawing-text { font-size:18px; color:#000080; font-weight:bold; margin-top:8px; }
 </style>
 </head>
 <body>
 
 <!-- 跑马灯 -->
 <div class="marquee-bar">
-  <span class="marquee-text">★ 欢迎访问【今日运势占卜系统 v2.0】★ 本站自1997年运营至今 ★ 已为 9,999,999+ 打工人提供运势预测 ★ 最佳浏览器：Netscape Navigator 4.0 / IE5.0 ★ 建议分辨率 800x600 ★ </span>
+  <span class="marquee-text">★ 欢迎访问【打工人赛博占卜 v2.0】★ 日均服务 9,999,999+ 社畜 ★ 每天摇一摇，上班不迟到 ★ 本系统由 AI 驱动，准确率高达 ∞% ★ 信则灵不信也灵 ★ </span>
 </div>
 
 <!-- 页面容器 -->
@@ -140,6 +144,7 @@
           🎰 开始抽签！
         </button>
         <p style="margin-top:12px;font-size:11px;color:#808080" id="hintText">每日限抽一次，结果全天有效</p>
+        <p style="margin-top:12px;font-size:13px;color:#000080;font-style:italic" id="dailyQuote"></p>
         <hr class="hr-groove">
         <span class="hit-counter" id="streakCounter">🔥 连续打卡: 0 天</span>
       </div>
@@ -165,9 +170,11 @@
         <hr class="hr-groove">
         <div class="fortune-tip" id="fortuneTip"></div>
         <div class="lucky-box" id="luckyBox"></div>
+        <p style="text-align:center;margin:12px 0;font-size:14px" id="fortuneRank"></p>
         <hr class="hr-groove">
         <p style="text-align:center">
           <button class="btn" onclick="copyFortune()" style="font-size:11px">📋 复制结果</button>
+          <button class="btn" onclick="generateCard()" style="font-size:11px;margin-left:8px">🖼️ 生成卡片</button>
           <button class="btn" onclick="goBack()" style="font-size:11px;margin-left:8px">◀ 返回</button>
         </p>
         <p style="text-align:center;margin-top:8px">
@@ -469,6 +476,42 @@ const dateStr=`${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日 
 document.getElementById('dateText').textContent=dateStr;
 document.getElementById('statusDate').textContent=dateStr;
 
+// 每日一言
+const dailyQuotes=[
+  '今天也是元气满满地想辞职的一天呢~',
+  '工作使我快乐（大声确信）',
+  '只要我跑得够快，DDL就追不上我！',
+  '"再改最后一版"——第 37 次听到这句话',
+  '今天的咖啡，是打工人的圣水',
+  '摸鱼一时爽，一直摸鱼一直爽（bushi',
+  '上班的意义就是为了下班！这很合理吧？',
+  '如果努力有用的话，那还要天赋干嘛（躺平.jpg）',
+  '打工人打工魂，打工人都是人上人！',
+  '今天不想上班，明天也不想，后天也不想...',
+  '我的工作态度：认真摸鱼，快乐打工~',
+  'bug 不是我写的，是它自己长出来的！',
+  '每天起床第一句，先给自己打个气（然后继续睡）',
+  '世界上最短的恐怖故事："周一"',
+  '学到了新东西！虽然明天就会忘...',
+  '我不是在摸鱼，我是在进行创意孵化',
+  '今日份的精神状态：已读不回宇宙',
+  '据说认真工作会被看到？所以我在认真演戏~',
+  '人生苦短，不如摸鱼（划掉）好好工作',
+  '我的电脑和我一样：上班就卡，下班就好',
+  '打工不可怕，可怕的是打着打着还上瘾了',
+  '今天也要做一个闪闪发光的打工人呢✨',
+  '如果迟到是一种才华，那我就是天才',
+  '需求又改了？没关系，我的耐心已经修炼到 SSR 了',
+  '下班倒计时是今天唯一的快乐源泉',
+  '虽然在搬砖，但我搬的是梦想的砖（确信）',
+  '会议的本质：本该是一封邮件的事',
+  '我的工位我的家，就差一张床了吧',
+  '今天也在用可爱征服世界的路上呢~',
+  '宇宙的尽头是什么？是周末啊！！！'
+];
+const quoteIdx=hashSeed(getDailySeed()*13)%dailyQuotes.length;
+document.getElementById('dailyQuote').textContent=`「${dailyQuotes[quoteIdx]}」`;
+
 // 角色
 let currentRole=localStorage.getItem('fortuneRole')||null;
 let currentFortune=null;
@@ -492,18 +535,29 @@ if(currentRole)selectRole(currentRole);
 // 抽签
 document.getElementById('drawBtn').addEventListener('click',()=>{
   if(!currentRole)return;
-  const f=getDailyFortune(currentRole);
-  currentFortune=f;
-  saveFortune(f,currentRole);
-  document.getElementById('fortuneNum').textContent=`[ 签号 No.${(hashSeed(getDailySeed())%99)+1} | ${getTodayStr()} ]`;
-  document.getElementById('fortuneType').textContent=f.type;
-  document.getElementById('fortuneSub').textContent=f.sub;
-  document.getElementById('fortuneText').textContent=f.text;
-  document.getElementById('fortuneDetail').textContent=f.detail;
-  document.getElementById('fortuneTip').textContent=f.tip;
-  document.getElementById('luckyBox').innerHTML=f.lucky.map(l=>`<div class="lucky-item"><div class="licon">${l.icon}</div><div>${l.name}</div></div>`).join('');
-  document.getElementById('streakCounter').textContent=`🔥 连续打卡: ${getStreak()} 天`;
-  showPage('resultPage');
+  const btn=document.getElementById('drawBtn');
+  if(btn.disabled)return;
+  btn.disabled=true;
+  btn.innerHTML='<span class="shake" style="font-size:32px">🎋</span><div class="drawing-text">摇签中...</div>';
+  btn.style.padding='12px 40px';
+  setTimeout(()=>{
+    const f=getDailyFortune(currentRole);
+    currentFortune=f;
+    saveFortune(f,currentRole);
+    document.getElementById('fortuneNum').textContent=`[ 签号 No.${(hashSeed(getDailySeed())%99)+1} | ${getTodayStr()} ]`;
+    document.getElementById('fortuneType').textContent=f.type;
+    document.getElementById('fortuneSub').textContent=f.sub;
+    document.getElementById('fortuneText').textContent=f.text;
+    document.getElementById('fortuneDetail').textContent=f.detail;
+    document.getElementById('fortuneTip').textContent=f.tip;
+    document.getElementById('luckyBox').innerHTML=f.lucky.map(l=>`<div class="lucky-item"><div class="licon">${l.icon}</div><div>${l.name}</div></div>`).join('');
+    document.getElementById('streakCounter').textContent=`🔥 连续打卡: ${getStreak()} 天`;
+    const rank=90+hashSeed(getDailySeed()*7)%11;
+    document.getElementById('fortuneRank').innerHTML=`✨ 你今天的运势超过了 <b style="color:#ff0000;font-size:18px">${rank}%</b> 的打工人`;
+    btn.disabled=false;
+    btn.innerHTML='🎰 开始抽签！';
+    showPage('resultPage');
+  },3000);
 });
 
 // 返回
@@ -528,6 +582,63 @@ document.getElementById('historyBtn').addEventListener('click',()=>{
 });
 document.getElementById('historyClose').addEventListener('click',()=>{document.getElementById('historyOverlay').classList.remove('show');});
 document.getElementById('historyOverlay').addEventListener('click',(e)=>{if(e.target.id==='historyOverlay')document.getElementById('historyOverlay').classList.remove('show');});
+
+// 生成分享卡片
+function generateCard(){
+  if(!currentFortune||!currentRole)return;
+  const f=currentFortune;
+  const r=roles.find(x=>x.id===currentRole);
+  const rank=90+hashSeed(getDailySeed()*7)%11;
+  const canvas=document.createElement('canvas');
+  canvas.width=400;canvas.height=600;
+  const ctx=canvas.getContext('2d');
+  // 背景
+  ctx.fillStyle='#c0c0c0';ctx.fillRect(0,0,400,600);
+  // 标题栏
+  const grad=ctx.createLinearGradient(0,0,400,0);grad.addColorStop(0,'#000080');grad.addColorStop(1,'#1084d0');
+  ctx.fillStyle=grad;ctx.fillRect(0,0,400,32);
+  ctx.fillStyle='#fff';ctx.font='bold 14px "Microsoft YaHei",sans-serif';
+  ctx.fillText('打工人赛博占卜 - '+r.name,10,22);
+  // 日期
+  ctx.fillStyle='#808080';ctx.font='12px monospace';
+  ctx.fillText(getTodayStr()+' | 签号 No.'+(hashSeed(getDailySeed())%99+1),10,54);
+  // 运势星级
+  ctx.fillStyle='#000';ctx.font='bold 36px "Arial Black",sans-serif';
+  ctx.textAlign='center';ctx.fillText(f.type,200,100);
+  // sub
+  ctx.font='12px monospace';ctx.fillStyle='#808080';
+  ctx.fillText(f.sub,200,125);
+  // 签文
+  ctx.font='bold 16px "Microsoft YaHei",sans-serif';ctx.fillStyle='#000';
+  const lines=f.text.split('\n');
+  lines.forEach((line,i)=>{ctx.fillText(line,200,165+i*24);});
+  // detail（自动换行）
+  ctx.font='13px "Microsoft YaHei",sans-serif';ctx.fillStyle='#333';ctx.textAlign='left';
+  const maxW=360;let detailY=230;
+  const words=f.detail;let line2='';
+  for(let i=0;i<words.length;i++){
+    line2+=words[i];
+    if(ctx.measureText(line2).width>maxW){ctx.fillText(line2,20,detailY);detailY+=20;line2='';}
+  }
+  if(line2)ctx.fillText(line2,20,detailY);
+  // 幸运物
+  detailY+=35;
+  ctx.fillStyle='#000080';ctx.fillRect(20,detailY,360,50);
+  ctx.fillStyle='#00ff00';ctx.font='12px monospace';ctx.textAlign='center';
+  f.lucky.forEach((l,i)=>{ctx.fillText(l.icon+' '+l.name,65+i*90,detailY+30);});
+  // 排名
+  detailY+=70;
+  ctx.fillStyle='#000';ctx.font='bold 14px "Microsoft YaHei",sans-serif';
+  ctx.fillText('✨ 你今天的运势超过了 '+rank+'% 的打工人',200,detailY);
+  // 水印
+  ctx.fillStyle='#808080';ctx.font='11px monospace';
+  ctx.fillText('打工人赛博占卜 | toviaz.github.io/daily-fortune',200,580);
+  // 下载
+  const link=document.createElement('a');
+  link.download='fortune_'+getTodayStr()+'.png';
+  link.href=canvas.toDataURL('image/png');
+  link.click();
+}
 </script>
 </body>
 </html>
