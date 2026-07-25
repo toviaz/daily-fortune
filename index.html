@@ -463,7 +463,7 @@ const weekDays=['周日','周一','周二','周三','周四','周五','周六'];
 function getTodayStr(){const d=new Date();return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
 function getDailySeed(){const d=new Date();return d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();}
 function hashSeed(s){let h=s;h=((h>>16)^h)*0x45d9f3b;h=((h>>16)^h)*0x45d9f3b;h=(h>>16)^h;return Math.abs(h);}
-function getDailyFortune(rid){const l=fortuneDB[rid]||fortuneDB.test;const seed=hashSeed(getDailySeed()*31+rid.split('').reduce((a,c)=>a+c.charCodeAt(0),0));return l[seed%l.length];}
+function getDailyFortune(rid){const l=fortuneDB[rid]||fortuneDB.test;const good=l.filter(f=>f.grade>=8);const seed=hashSeed(getDailySeed()*31+rid.split('').reduce((a,c)=>a+c.charCodeAt(0),0));return good[seed%good.length];}
 function getStreak(){const h=JSON.parse(localStorage.getItem('fortuneHistory')||'[]');if(!h.length)return 0;let s=0;const t=new Date();for(let i=0;i<365;i++){const d=new Date(t);d.setDate(d.getDate()-i);const ds=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;if(h.some(x=>x.date===ds))s++;else break;}return s;}
 function saveFortune(f,rid){const h=JSON.parse(localStorage.getItem('fortuneHistory')||'[]');const t=getTodayStr();if(!h.some(x=>x.date===t)){h.unshift({date:t,type:f.type,sub:f.sub,text:f.text,grade:f.grade,role:rid});if(h.length>100)h.pop();localStorage.setItem('fortuneHistory',JSON.stringify(h));}}
 
