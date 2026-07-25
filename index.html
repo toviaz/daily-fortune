@@ -621,6 +621,8 @@ function selectRole(rid){
 }
 if(currentRole)selectRole(currentRole);
 
+document.getElementById('rememberRole').addEventListener('change',function(){if(!this.checked)localStorage.removeItem('fortuneRole');});
+
 // 抽签
 document.getElementById('drawBtn').addEventListener('click',()=>{
   if(!currentRole)return;
