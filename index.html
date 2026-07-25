@@ -12,8 +12,8 @@
   .bevel-in { border:2px solid; border-color:#808080 #fff #fff #808080; box-shadow:inset 1px 1px 0 #404040,inset -1px -1px 0 #dfdfdf; }
   .bevel-out:active,.btn:active { border-color:#808080 #fff #fff #808080 !important; box-shadow:inset 1px 1px 0 #404040,inset -1px -1px 0 #dfdfdf !important; transform:translate(1px,1px); }
   /* 按钮 */
-  .btn { display:inline-block; padding:6px 20px; background:#c0c0c0; border:2px solid; border-color:#fff #808080 #808080 #fff; box-shadow:inset -1px -1px 0 #404040,inset 1px 1px 0 #dfdfdf; font-family:inherit; font-size:14px; font-weight:bold; text-transform:uppercase; letter-spacing:1px; cursor:pointer; text-decoration:none; color:#000; }
-  .btn:hover { background:#d0d0d0; }
+  .btn { display:inline-block; padding:6px 20px; background:#c0c0c0; border:2px solid; border-color:#fff #808080 #808080 #fff; box-shadow:inset -1px -1px 0 #404040,inset 1px 1px 0 #dfdfdf, 3px 3px 0 rgba(0,0,0,0.2); font-family:inherit; font-size:14px; font-weight:bold; text-transform:uppercase; letter-spacing:1px; cursor:pointer; text-decoration:none; color:#000; transition:transform 0.15s ease,box-shadow 0.15s ease; }
+  .btn:hover { background:#d0d0d0; transform:translateY(-2px); box-shadow:inset -1px -1px 0 #404040,inset 1px 1px 0 #dfdfdf, 4px 5px 0 rgba(0,0,0,0.2); }
   .btn:focus-visible { outline:2px dotted #000; outline-offset:2px; }
   .btn-blue { background:#0000ff; color:#fff; border-color:#5555ff #000080 #000080 #5555ff; }
   .btn-blue:hover { background:#3333ff; }
@@ -22,8 +22,9 @@
   .btn-green { background:#00aa00; color:#fff; border-color:#00ff00 #006600 #006600 #00ff00; }
   .btn-green:hover { background:#00cc00; }
   /* Win95窗口 */
-  .win-window { background:#c0c0c0; border:2px solid; border-color:#fff #808080 #808080 #fff; box-shadow:inset -1px -1px 0 #404040,inset 1px 1px 0 #dfdfdf; }
-  .win-titlebar { background:linear-gradient(to right,#000080,#1084d0); color:#fff; font-weight:bold; padding:4px 8px; font-size:14px; display:flex; justify-content:space-between; align-items:center; }
+  .win-window { background:#c0c0c0; border:2px solid; border-color:#fff #808080 #808080 #fff; box-shadow:inset -1px -1px 0 #404040,inset 1px 1px 0 #dfdfdf, 6px 6px 0 rgba(0,0,0,0.3); transition:transform 0.3s ease,box-shadow 0.3s ease; }
+  .win-window:hover { transform:translateY(-3px); box-shadow:inset -1px -1px 0 #404040,inset 1px 1px 0 #dfdfdf, 8px 10px 0 rgba(0,0,0,0.25); }
+  .win-titlebar { background:linear-gradient(to right,#000080,#1084d0); color:#fff; font-weight:bold; padding:4px 8px; font-size:14px; display:flex; justify-content:space-between; align-items:center; text-shadow:1px 1px 2px rgba(0,0,0,0.5); }
   .win-titlebar .close-x { width:18px; height:18px; background:#c0c0c0; border:2px solid; border-color:#fff #808080 #808080 #fff; display:flex; justify-content:center; align-items:center; font-size:11px; font-weight:bold; cursor:pointer; color:#000; line-height:1; }
   .win-titlebar .close-x:active { border-color:#808080 #fff #fff #808080; }
   .win-content { border:2px solid; border-color:#808080 #fff #fff #808080; box-shadow:inset 1px 1px 0 #404040,inset -1px -1px 0 #dfdfdf; background:#fff; margin:4px; padding:12px; }
@@ -57,8 +58,8 @@
   .page.active { display:block; }
   /* 角色选择网格 */
   .role-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
-  .role-card { background:#c0c0c0; border:2px solid; border-color:#fff #808080 #808080 #fff; box-shadow:inset -1px -1px 0 #404040,inset 1px 1px 0 #dfdfdf; padding:12px 4px; text-align:center; cursor:pointer; }
-  .role-card:hover { background:#d4d4d4; }
+  .role-card { background:#c0c0c0; border:2px solid; border-color:#fff #808080 #808080 #fff; box-shadow:inset -1px -1px 0 #404040,inset 1px 1px 0 #dfdfdf, 3px 3px 0 rgba(0,0,0,0.2); padding:12px 4px; text-align:center; cursor:pointer; transition:transform 0.2s ease,box-shadow 0.2s ease; }
+  .role-card:hover { background:#d4d4d4; transform:translateY(-4px) scale(1.03); box-shadow:inset -1px -1px 0 #404040,inset 1px 1px 0 #dfdfdf, 5px 7px 0 rgba(0,0,0,0.2); }
   .role-card:active { border-color:#808080 #fff #fff #808080; box-shadow:inset 1px 1px 0 #404040,inset -1px -1px 0 #dfdfdf; transform:translate(1px,1px); }
   .role-card .icon { font-size:14px; font-family:"Courier New",monospace; font-weight:bold; color:#00ff00; background:#000; padding:4px 6px; display:inline-block; border:1px solid #808080; }
   .role-card .name { font-size:12px; font-weight:bold; margin-top:4px; }
@@ -88,13 +89,31 @@
   .shake { animation:shakeIt 0.3s ease-in-out infinite; display:inline-block; }
   @keyframes shakeIt { 0%,100%{transform:rotate(0deg)} 25%{transform:rotate(-15deg)} 75%{transform:rotate(15deg)} }
   .drawing-text { font-size:18px; color:#000080; font-weight:bold; margin-top:8px; }
+  /* 奖品弹窗 */
+  .prize-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.6); z-index:600; display:none; justify-content:center; align-items:center; }
+  .prize-overlay.show { display:flex; }
+  .prize-box { text-align:center; animation:prizePopIn 0.5s ease-out; }
+  @keyframes prizePopIn { 0%{transform:scale(0) rotate(-180deg);opacity:0} 100%{transform:scale(1) rotate(0deg);opacity:1} }
+  .prize-icon { font-size:64px; animation:prizeFloat 1.5s ease-in-out infinite; }
+  @keyframes prizeFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
+  .prize-name { font-size:20px; font-weight:bold; color:#ffff00; margin-top:8px; text-shadow:2px 2px 0 #000; }
+  .prize-desc { font-size:13px; color:#fff; margin-top:4px; }
+  .prize-sparkle { font-size:28px; animation:sparkleSpin 2s linear infinite; display:inline-block; }
+  @keyframes sparkleSpin { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
+  .prize-btn { margin-top:16px; }
+  /* 背包 */
+  .bag-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+  .bag-item { text-align:center; padding:8px; border:2px solid; border-color:#fff #808080 #808080 #fff; background:#e8e8e8; }
+  .bag-item .bag-icon { font-size:28px; }
+  .bag-item .bag-name { font-size:11px; font-weight:bold; margin-top:2px; }
+  .bag-item .bag-date { font-size:10px; color:#808080; }
 </style>
 </head>
 <body>
 
 <!-- 跑马灯 -->
 <div class="marquee-bar">
-  <span class="marquee-text">★ 欢迎访问【打工人赛博占卜 v2.0】★ 日均服务 9,999,999+ 社畜 ★ 每天摇一摇，上班不迟到 ★ 本系统由 AI 驱动，准确率高达 ∞% ★ 信则灵不信也灵 ★ </span>
+  <span class="marquee-text">★ 欢迎访问【打工人赛博占卜 v2.0】★ 日均服务 9,999,999+ 社畜 ★ 每天摇一摇，上班不迟到 ★ 死道友不死贫道，甩锅要趁早 ★ 本系统由 AI 驱动，准确率高达 ∞% ★ 信则灵不信也灵 ★ </span>
 </div>
 
 <!-- 页面容器 -->
@@ -203,7 +222,32 @@
 <!-- 底部状态栏 -->
 <div class="statusbar">
   <div class="segment" id="statusRole">未选择职业</div>
+  <div class="segment" style="cursor:pointer" id="bagBtn">🎒 背包</div>
   <div class="segment" id="statusDate"></div>
+</div>
+
+<!-- 奖品弹窗 -->
+<div class="prize-overlay" id="prizeOverlay">
+  <div class="prize-box">
+    <div><span class="prize-sparkle">✨</span> <span class="prize-sparkle" style="animation-delay:0.5s">🌟</span> <span class="prize-sparkle" style="animation-delay:1s">✨</span></div>
+    <div class="prize-icon" id="prizeIcon"></div>
+    <div class="prize-name" id="prizeName"></div>
+    <div class="prize-desc" id="prizeDesc"></div>
+    <div class="prize-btn"><button class="btn btn-green" id="prizeCloseBtn" style="font-size:13px;padding:8px 24px">开心收下！</button></div>
+  </div>
+</div>
+
+<!-- 背包弹窗 -->
+<div class="overlay" id="bagOverlay">
+  <div class="history-win win-window">
+    <div class="win-titlebar">
+      <span>🎒 我的背包</span>
+      <div class="close-x" id="bagClose">✕</div>
+    </div>
+    <div class="win-content" id="bagContent">
+      <p style="color:#808080;text-align:center">背包空空的，快去抽签吧！</p>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -557,6 +601,7 @@ document.getElementById('drawBtn').addEventListener('click',()=>{
     btn.disabled=false;
     btn.innerHTML='🎰 开始抽签！';
     showPage('resultPage');
+    setTimeout(showPrize,500);
   },3000);
 });
 
@@ -582,6 +627,71 @@ document.getElementById('historyBtn').addEventListener('click',()=>{
 });
 document.getElementById('historyClose').addEventListener('click',()=>{document.getElementById('historyOverlay').classList.remove('show');});
 document.getElementById('historyOverlay').addEventListener('click',(e)=>{if(e.target.id==='historyOverlay')document.getElementById('historyOverlay').classList.remove('show');});
+
+// 奖品池
+const prizes=[
+  {icon:'🎫',name:'带薪摸鱼券 30min',desc:'合法摸鱼，老板看到也不能说什么'},
+  {icon:'🛡️',name:'迟到免责卡',desc:'今日迟到不扣钱，限用一次'},
+  {icon:'👻',name:'会议隐身术',desc:'会议中自动隐身，不会被点名发言'},
+  {icon:'🎉',name:'周五提前下班券',desc:'比正常下班时间提前1小时，有效期本周'},
+  {icon:'🪃',name:'甩锅护身符',desc:'"这个不是我负责的"——说出口的底气+100'},
+  {icon:'🧋',name:'神秘奶茶兑换码',desc:'兑换码：NMSL...不对，是MILK2026'},
+  {icon:'☕',name:'今日双倍咖啡因',desc:'精神力翻倍，副作用是下午会心跳加速'},
+  {icon:'🍱',name:'老板请客午餐券',desc:'（仅限做梦时使用）'},
+  {icon:'🎁',name:'下午茶盲盒',desc:'打开可能是蛋糕，也可能是...一杯白开水'},
+  {icon:'💎',name:'SSR 运气加成卡',desc:'今日欧皇附体，抽什么中什么'},
+  {icon:'🛡️',name:'Bug 免疫 Buff',desc:'持续24h，写的代码自动没有Bug'},
+  {icon:'❄️',name:'需求冻结结界',desc:'结界内需求不可变更，持续到今天下班'},
+  {icon:'🤐',name:'产品经理沉默术',desc:'产品今天不会说"就改一点点"'},
+  {icon:'🔮',name:'代码自动修复咒语',desc:'对着屏幕念三遍，Bug自己就好了'},
+  {icon:'👑',name:'今日最佳打工人',desc:'全公司就你最靓，虽然没有奖金'},
+  {icon:'🐟',name:'赛博锦鲤本鲤',desc:'转发此锦鲤，今天不加班'},
+  {icon:'🎮',name:'摸鱼界的王者',desc:'摸鱼段位：最强王者，1347分'},
+  {icon:'🗡️',name:'BUG终结者',desc:'今天提的Bug开发全都认，不许反驳'},
+  {icon:'📱',name:'已读不回特权卡',desc:'今日所有消息可合法已读不回'},
+  {icon:'🧸',name:'精神稳定小熊',desc:'抱着它上班，心态稳如老狗'},
+  {icon:'🎪',name:'划水达人勋章',desc:'表面在开会，实际在神游太虚'},
+  {icon:'💤',name:'午睡延长券',desc:'午休时间+30min，不扣考勤'},
+  {icon:'🌈',name:'彩虹屁生成器',desc:'自动给老板发彩虹屁，好感度+999'},
+  {icon:'🧲',name:'需求吸收盾',desc:'别人的需求弹开，自己的需求吸收'},
+  {icon:'🎭',name:'表情管理大师',desc:'开会时完美控制表情，内心戏不外露'},
+  {icon:'🍀',name:'四叶草护身符',desc:'今天不会被@，也不会被抓包摸鱼'},
+  {icon:'⚡',name:'效率暴走药水',desc:'喝下后进入狂暴模式，但只持续2小时'},
+  {icon:'🎵',name:'降噪结界',desc:'自动屏蔽办公室八卦和噪音'},
+  {icon:'🦊',name:'狐狸面具',desc:'死道友不死贫道，甩锅技能冷却归零'},
+  {icon:'🏖️',name:'带薪休假幻想卡',desc:'闭上眼就到了马尔代夫（睁开还在工位）'},
+];
+
+function getDailyPrize(){const seed=hashSeed(getDailySeed()*17+3);return prizes[seed%prizes.length];}
+function savePrize(p){const bag=JSON.parse(localStorage.getItem('fortuneBag')||'[]');const t=getTodayStr();if(!bag.some(x=>x.date===t)){bag.unshift({date:t,icon:p.icon,name:p.name,desc:p.desc});if(bag.length>50)bag.pop();localStorage.setItem('fortuneBag',JSON.stringify(bag));}}
+
+// 显示奖品弹窗
+function showPrize(){
+  const p=getDailyPrize();
+  savePrize(p);
+  document.getElementById('prizeIcon').textContent=p.icon;
+  document.getElementById('prizeName').textContent=p.name;
+  document.getElementById('prizeDesc').textContent=p.desc;
+  document.getElementById('prizeOverlay').classList.add('show');
+}
+document.getElementById('prizeCloseBtn').addEventListener('click',()=>{document.getElementById('prizeOverlay').classList.remove('show');});
+document.getElementById('prizeOverlay').addEventListener('click',(e)=>{if(e.target.id==='prizeOverlay')document.getElementById('prizeOverlay').classList.remove('show');});
+
+// 背包
+document.getElementById('bagBtn').addEventListener('click',()=>{
+  const bag=JSON.parse(localStorage.getItem('fortuneBag')||'[]');
+  const c=document.getElementById('bagContent');
+  if(!bag.length){c.innerHTML='<p style="color:#808080;text-align:center">背包空空的，快去抽签吧！</p>';
+  }else{
+    let html=`<p style="font-size:11px;color:#808080;margin-bottom:8px">已收集 ${bag.length} 件宝贝</p><div class="bag-grid">`;
+    html+=bag.map(x=>`<div class="bag-item"><div class="bag-icon">${x.icon}</div><div class="bag-name">${x.name}</div><div class="bag-date">${x.date}</div></div>`).join('');
+    html+='</div>';
+    c.innerHTML=html;
+  }
+  document.getElementById('bagOverlay').classList.add('show');
+});
+document.getElementById('bagClose').addEventListener('click',()=>{document.getElementById('bagOverlay').classList.remove('show');});
+document.getElementById('bagOverlay').addEventListener('click',(e)=>{if(e.target.id==='bagOverlay')document.getElementById('bagOverlay').classList.remove('show');});
 
 // 生成分享卡片
 function generateCard(){
