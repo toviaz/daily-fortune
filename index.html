@@ -107,6 +107,27 @@
   .bag-item .bag-icon { font-size:28px; }
   .bag-item .bag-name { font-size:11px; font-weight:bold; margin-top:2px; }
   .bag-item .bag-date { font-size:10px; color:#808080; }
+  /* 反馈侧边栏 */
+  .feedback-toggle { position:fixed; right:0; top:50%; transform:translateY(-50%); writing-mode:vertical-rl; background:#000080; color:#fff; padding:12px 6px; cursor:pointer; font-size:13px; font-weight:bold; border:2px solid; border-color:#5555ff #000040 #000040 #5555ff; border-right:none; z-index:100; letter-spacing:2px; transition:transform 0.2s; }
+  .feedback-toggle:hover { transform:translateY(-50%) translateX(-3px); }
+  .feedback-panel { position:fixed; right:-360px; top:0; bottom:0; width:350px; background:#c0c0c0; border-left:3px solid; border-color:#fff; box-shadow:-4px 0 10px rgba(0,0,0,0.3); z-index:400; transition:right 0.3s ease; overflow-y:auto; }
+  .feedback-panel.open { right:0; }
+  .feedback-panel .win-titlebar { position:sticky; top:0; z-index:1; }
+  .fb-form { padding:10px; }
+  .fb-form label { font-size:12px; font-weight:bold; display:block; margin-top:8px; }
+  .fb-form input,.fb-form textarea { width:100%; padding:4px 6px; border:2px solid; border-color:#808080 #fff #fff #808080; box-shadow:inset 1px 1px 0 #404040; font-family:inherit; font-size:13px; background:#fff; }
+  .fb-form textarea { height:80px; resize:vertical; }
+  .fb-emoji-bar { display:flex; gap:6px; flex-wrap:wrap; margin:8px 0; }
+  .fb-emoji-btn { padding:4px 8px; cursor:pointer; border:2px solid; border-color:#fff #808080 #808080 #fff; background:#e8e8e8; font-size:13px; transition:transform 0.1s; }
+  .fb-emoji-btn:hover { transform:scale(1.1); }
+  .fb-emoji-btn.selected { background:#000080; color:#fff; border-color:#000040 #5555ff #5555ff #000040; }
+  .fb-msg { padding:10px; border-bottom:1px solid #808080; font-size:12px; }
+  .fb-msg:nth-child(odd) { background:#e8e8e8; }
+  .fb-msg .fb-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; }
+  .fb-msg .fb-nick { font-weight:bold; color:#000080; }
+  .fb-msg .fb-time { color:#808080; font-size:10px; }
+  .fb-msg .fb-emo { font-size:14px; float:right; }
+  .fb-msg .fb-text { line-height:1.5; }
 </style>
 </head>
 <body>
@@ -217,6 +238,30 @@
       <p style="color:#808080;text-align:center">暂无记录...</p>
     </div>
   </div>
+</div>
+
+<!-- 反馈侧边栏 -->
+<div class="feedback-toggle" id="fbToggle">💬 留言板</div>
+<div class="feedback-panel" id="fbPanel">
+  <div class="win-titlebar">
+    <span>💬 留言板 - 大家的吐槽</span>
+    <div class="close-x" id="fbClose">✕</div>
+  </div>
+  <div class="fb-form">
+    <label>选个表情~</label>
+    <div class="fb-emoji-bar" id="fbEmojiBar"></div>
+    <label>昵称（选填）</label>
+    <input type="text" id="fbNick" placeholder="匿名打工人" maxlength="20">
+    <label>联系方式（选填）</label>
+    <input type="text" id="fbContact" placeholder="微信/邮箱，方便联系你~" maxlength="50">
+    <label>说点什么吧！</label>
+    <textarea id="fbMsg" placeholder="吐槽、建议、表白，随便写~" maxlength="200"></textarea>
+    <p style="text-align:right;margin-top:8px">
+      <button class="btn btn-blue" id="fbSubmit" style="font-size:12px;padding:4px 16px">发射！</button>
+    </p>
+  </div>
+  <hr class="hr-groove">
+  <div id="fbList"><p style="color:#808080;text-align:center;padding:12px">加载中...</p></div>
 </div>
 
 <!-- 底部状态栏 -->
@@ -749,6 +794,71 @@ function generateCard(){
   link.href=canvas.toDataURL('image/png');
   link.click();
 }
+
+// ===== 留言板 =====
+const SB_URL='https://mkmqqzsyddueivwzfanb.supabase.co';
+const SB_KEY='sb_publishable_-RSn1snrAeQJpARohH050w_5pW9U0Cj';
+const fbEmojis=['(｡･ω･｡)','(≧▽≦)','(╥﹏╥)','(ノ°▽°)ノ','(；´Д`)','(｡♥‿♥｡)','(╯°□°)╯︵ ┻━┻','(⌐■_■)','(ᗒᗣᗕ)՞','(∩^o^)⊃━☆','(￣▽￣)ノ','(¬‿¬)','(ﾉ◕ヮ◕)ﾉ*:・ﾟ✧','(˘▾˘ )~','(•̀ᴗ•́)و'];
+let selectedEmoji=fbEmojis[0];
+
+// 渲染表情栏
+const emojiBar=document.getElementById('fbEmojiBar');
+fbEmojis.forEach((e,i)=>{
+  const btn=document.createElement('span');
+  btn.className='fb-emoji-btn'+(i===0?' selected':'');
+  btn.textContent=e;
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.fb-emoji-btn').forEach(b=>b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedEmoji=e;
+  });
+  emojiBar.appendChild(btn);
+});
+
+// 开关面板
+document.getElementById('fbToggle').addEventListener('click',()=>{document.getElementById('fbPanel').classList.add('open');loadFeedback();});
+document.getElementById('fbClose').addEventListener('click',()=>{document.getElementById('fbPanel').classList.remove('open');});
+
+// 加载留言
+function loadFeedback(){
+  fetch(SB_URL+'/rest/v1/feedback?select=*&order=created_at.desc&limit=50',{
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}
+  }).then(r=>r.json()).then(data=>{
+    const list=document.getElementById('fbList');
+    if(!data.length){list.innerHTML='<p style="color:#808080;text-align:center;padding:12px">还没有留言，来做第一个吧~</p>';return;}
+    list.innerHTML=data.map(m=>{
+      const d=new Date(m.created_at);
+      const ts=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+      return`<div class="fb-msg"><div class="fb-head"><span class="fb-nick">${(m.nickname||'匿名打工人').replace(/</g,'&lt;')}</span><span class="fb-time">${ts}</span></div><div class="fb-text"><span class="fb-emo">${m.emoji||''}</span>${(m.message||'').replace(/</g,'&lt;').replace(/\n/g,'<br>')}</div></div>`;
+    }).join('');
+  }).catch(()=>{document.getElementById('fbList').innerHTML='<p style="color:red;text-align:center;padding:12px">加载失败，稍后再试~</p>';});
+}
+
+// 提交留言
+document.getElementById('fbSubmit').addEventListener('click',()=>{
+  const msg=document.getElementById('fbMsg').value.trim();
+  if(!msg){alert('写点什么再发射吧~');return;}
+  const body={
+    message:msg,
+    emoji:selectedEmoji,
+    nickname:document.getElementById('fbNick').value.trim()||'匿名打工人',
+    contact:document.getElementById('fbContact').value.trim()||null
+  };
+  const btn=document.getElementById('fbSubmit');
+  btn.disabled=true;btn.textContent='发射中...';
+  fetch(SB_URL+'/rest/v1/feedback',{
+    method:'POST',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=representation'},
+    body:JSON.stringify(body)
+  }).then(r=>{
+    if(r.ok){
+      document.getElementById('fbMsg').value='';
+      btn.textContent='发射成功！✨';
+      setTimeout(()=>{btn.disabled=false;btn.textContent='发射！';},1500);
+      loadFeedback();
+    }else{throw new Error();}
+  }).catch(()=>{btn.disabled=false;btn.textContent='发射！';alert('发射失败了，再试一次~');});
+});
 </script>
 </body>
 </html>
