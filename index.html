@@ -269,6 +269,11 @@
         <button class="btn sync-btn" onclick="saveCloudData(true)">⬆️ 备份到云端</button>
         <button class="btn sync-btn" onclick="exportData()">💾 导出文件</button>
         <label class="btn sync-btn" style="cursor:pointer">📂 导入文件<input type="file" id="importFile" accept="application/json" style="display:none" onchange="importData(this)"></label>
+        <button class="btn sync-btn" onclick="showSyncCode()">🔑 我的同步码</button>
+      </p>
+      <p style="font-size:11px;color:#808080">
+        换电脑恢复：输入同步码 → <input id="syncCodeInput" style="width:160px;padding:2px 4px;border:1px solid #808080;font-size:11px" placeholder="c_xxx">
+        <button class="btn sync-btn" onclick="useSyncCode()">⬇️ 恢复数据</button>
       </p>
       <div id="historyTools"></div>
       <div id="heatmapBox"></div>
@@ -920,14 +925,24 @@ async function loadCloudData(showMsg){
   }catch(e){setSyncStatus('⚠️ 未同步',true);if(showMsg)alert('同步失败：'+(e.kind==='network'?'当前网络连不上，试试手机热点':'服务暂时不可用'));}
   return false;
 }
+function showSyncCode(){
+  prompt('你的数据同步码（换电脑时输入它即可恢复运势记录和背包）：',CLIENT_ID);
+}
+function useSyncCode(){
+  const v=document.getElementById('syncCodeInput').value.trim();
+  if(!v){alert('请先输入同步码');return;}
+  localStorage.setItem('fortuneClientId',v);
+  CLIENT_ID=v;
+  loadCloudData(true);
+}
 function exportData(){
-  const blob=new Blob([JSON.stringify(localSnapshot(),null,2)],{type:'application/json'});
+  const blob=new Blob([JSON.stringify({client_id:CLIENT_ID,...localSnapshot()},null,2)],{type:'application/json'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='fortune_backup_'+getTodayStr()+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 }
 function importData(input){
   const f=input.files&&input.files[0];if(!f)return;
   const rd=new FileReader();
-  rd.onload=()=>{try{const d=JSON.parse(rd.result);if(d.history)localStorage.setItem('fortuneHistory',JSON.stringify(d.history));if(d.bag)localStorage.setItem('fortuneBag',JSON.stringify(d.bag));if(d.role)localStorage.setItem('fortuneRole',d.role);alert('导入成功！即将刷新页面~');location.reload();}catch(e){alert('文件格式不对，导入失败');}};
+  rd.onload=()=>{try{const d=JSON.parse(rd.result);if(d.history)localStorage.setItem('fortuneHistory',JSON.stringify(d.history));if(d.bag)localStorage.setItem('fortuneBag',JSON.stringify(d.bag));if(d.role)localStorage.setItem('fortuneRole',d.role);if(d.client_id){localStorage.setItem('fortuneClientId',d.client_id);CLIENT_ID=d.client_id;}alert('导入成功！即将刷新页面~');location.reload();}catch(e){alert('文件格式不对，导入失败');}};
   rd.readAsText(f);
 }
 const fbEmojis=['(｡･ω･｡)','(≧▽≦)','(╥﹏╥)','(ノ°▽°)ノ','(；´Д`)','(｡♥‿♥｡)','(╯°□°)╯︵ ┻━┻','(⌐■_■)','(ᗒᗣᗕ)՞','(∩^o^)⊃━☆','(￣▽￣)ノ','(¬‿¬)','(ﾉ◕ヮ◕)ﾉ*:・ﾟ✧','(˘▾˘ )~','(•̀ᴗ•́)و'];
