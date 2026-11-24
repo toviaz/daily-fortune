@@ -128,6 +128,28 @@
   .fb-msg .fb-time { color:#808080; font-size:10px; }
   .fb-msg .fb-emo { font-size:14px; float:right; }
   .fb-msg .fb-text { line-height:1.5; }
+  /* ===== 新增功能样式 ===== */
+  .fb-filter-bar { display:flex; gap:4px; flex-wrap:wrap; padding:6px 10px 0; }
+  .fb-filter-btn { padding:3px 8px; font-size:11px; cursor:pointer; border:2px solid; border-color:#fff #808080 #808080 #fff; background:#e8e8e8; font-family:inherit; }
+  .fb-filter-btn.on { background:#000080; color:#fff; border-color:#000040 #5555ff #5555ff #000040; }
+  .fb-like { cursor:pointer; font-size:12px; padding:2px 6px; border:1px solid #808080; background:#e8e8e8; }
+  .fb-like.liked { background:#000080; color:#fff; }
+  .fb-role-tag { font-size:10px; color:#808080; }
+  .fb-queue-tip { font-size:11px; color:#800000; cursor:pointer; text-decoration:underline; }
+  .badge { display:inline-block; margin:3px; padding:3px 8px; font-size:11px; border:2px solid; border-color:#fff #808080 #808080 #fff; background:#e8e8e8; }
+  .badge.got { background:#ffffcc; font-weight:bold; }
+  .badge.locked { color:#808080; opacity:0.6; }
+  .heatmap { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; margin:6px 0 10px; }
+  .heat-cell { font-size:10px; text-align:center; padding:3px 0; background:#e8e8e8; border:1px solid #808080; }
+  .heat-cell.on { background:#00aa00; color:#fff; font-weight:bold; }
+  .sync-btn { font-size:10px; padding:2px 6px; margin:2px; }
+  .yiji-box { background:#ffffcc; padding:8px; font-size:12px; margin:8px 0; border:1px solid #808080; }
+  .yiji-box b { color:#000080; }
+  .pk-win { width:90%; max-width:440px; }
+  .pk-row { display:flex; align-items:center; gap:8px; margin:8px 0; font-size:13px; }
+  .pk-input { flex:1; padding:4px; border:2px solid; border-color:#808080 #fff #fff #808080; font-family:inherit; font-size:13px; }
+  .status-synced { color:#00ff00; }
+  .status-offline { color:#ffff00; }
 </style>
 
 </head>
@@ -212,11 +234,17 @@
         <div class="fortune-tip" id="fortuneTip"></div>
         <div class="lucky-box" id="luckyBox"></div>
         <p style="text-align:center;margin:12px 0;font-size:14px" id="fortuneRank"></p>
+        <div class="yiji-box" id="yijiBox"></div>
         <hr class="hr-groove">
         <p style="text-align:center">
           <button class="btn" onclick="copyFortune()" style="font-size:11px">📋 复制结果</button>
-          <button class="btn" onclick="generateCard()" style="font-size:11px;margin-left:8px">🖼️ 生成卡片</button>
-          <button class="btn" onclick="goBack()" style="font-size:11px;margin-left:8px">◀ 返回</button>
+          <button class="btn" onclick="generateCard()" style="font-size:11px;margin-left:6px">🖼️ 生成卡片</button>
+          <button class="btn" onclick="shareFortuneToBoard()" style="font-size:11px;margin-left:6px">📤 发留言板</button>
+        </p>
+        <p style="text-align:center;margin-top:6px">
+          <button class="btn" onclick="generateStatsCard()" style="font-size:11px">🗓️ 战绩长图</button>
+          <button class="btn" onclick="openPK()" style="font-size:11px;margin-left:6px">⚔️ 同事PK</button>
+          <button class="btn" onclick="goBack()" style="font-size:11px;margin-left:6px">◀ 返回</button>
         </p>
         <p style="text-align:center;margin-top:8px">
           <span class="blink-new">★ NEW! ★</span>
@@ -235,8 +263,18 @@
       <span>📜 历史记录</span>
       <div class="close-x" id="historyClose">✕</div>
     </div>
-    <div class="win-content" id="historyContent">
-      <p style="color:#808080;text-align:center">暂无记录...</p>
+    <div class="win-content">
+      <p style="font-size:11px;color:#808080">
+        <button class="btn sync-btn" onclick="loadCloudData(true)">☁️ 从云端同步</button>
+        <button class="btn sync-btn" onclick="saveCloudData(true)">⬆️ 备份到云端</button>
+        <button class="btn sync-btn" onclick="exportData()">💾 导出文件</button>
+        <label class="btn sync-btn" style="cursor:pointer">📂 导入文件<input type="file" id="importFile" accept="application/json" style="display:none" onchange="importData(this)"></label>
+      </p>
+      <div id="historyTools"></div>
+      <div id="heatmapBox"></div>
+      <div id="badgeBox"></div>
+      <hr class="hr-groove">
+      <div id="historyContent"><p style="color:#808080;text-align:center">暂无记录...</p></div>
     </div>
   </div>
 </div>
@@ -249,6 +287,10 @@
     <div class="close-x" id="fbClose">✕</div>
   </div>
   <div class="fb-form">
+    <label>我的工位（用于筛选和展示）</label>
+    <select id="fbRole" style="width:100%;padding:4px;border:2px solid;border-color:#808080 #fff #fff #808080;background:#fff">
+      <option value="">不显示职业</option>
+    </select>
     <label>选个表情~</label>
     <div class="fb-emoji-bar" id="fbEmojiBar"></div>
     <label>昵称（选填）</label>
@@ -258,10 +300,12 @@
     <label>说点什么吧！</label>
     <textarea id="fbMsg" placeholder="吐槽、建议、表白，随便写~" maxlength="200"></textarea>
     <p style="text-align:right;margin-top:8px">
+      <span class="fb-queue-tip" id="fbQueueTip" style="display:none;float:left"></span>
       <button class="btn btn-blue" id="fbSubmit" style="font-size:12px;padding:4px 16px">发射！</button>
     </p>
   </div>
   <hr class="hr-groove">
+  <div class="fb-filter-bar" id="fbFilterBar"></div>
   <div id="fbList"><p style="color:#808080;text-align:center;padding:12px">加载中...</p></div>
 </div>
 
@@ -270,6 +314,7 @@
   <div class="segment" id="statusRole">未选择职业</div>
   <div class="segment" style="cursor:pointer" id="bagBtn">🎒 背包</div>
   <div class="segment" id="statusDate"></div>
+  <div class="segment" id="syncStatus" title="数据同步状态">☁️ 本地</div>
 </div>
 
 <!-- 奖品弹窗 -->
@@ -296,6 +341,23 @@
   </div>
 </div>
 
+ <!-- 同事PK弹窗 -->
+<div class="overlay" id="pkOverlay">
+  <div class="pk-win win-window">
+    <div class="win-titlebar">
+      <span>⚔️ 今日运势 PK - 谁更惨？</span>
+      <div class="close-x" id="pkClose">✕</div>
+    </div>
+    <div class="win-content">
+      <p style="font-size:12px;color:#808080;text-align:center;margin-bottom:10px">输入两个名字，看看今天谁更需要被安慰~</p>
+      <div class="pk-row"><span>选手A：</span><input class="pk-input" id="pkNameA" placeholder="我" maxlength="12"></div>
+      <div class="pk-row"><span>选手B：</span><input class="pk-input" id="pkNameB" placeholder="同事" maxlength="12"></div>
+      <p style="text-align:center;margin-top:12px">
+        <button class="btn btn-blue" onclick="doPK()" style="font-size:12px">⚔️ 开始 PK</button>
+      </p>
+    </div>
+  </div>
+</div>
 <script>
 const roles = [
   {id:'test',icon:'[BUG]',name:'测试',desc:'// 漏洞猎手'},
@@ -555,7 +617,7 @@ function getDailySeed(){const d=new Date();return d.getFullYear()*10000+(d.getMo
 function hashSeed(s){let h=s;h=((h>>16)^h)*0x45d9f3b;h=((h>>16)^h)*0x45d9f3b;h=(h>>16)^h;return Math.abs(h);}
 function getDailyFortune(rid){const l=fortuneDB[rid]||fortuneDB.test;const good=l.filter(f=>f.grade>=8);const seed=hashSeed(getDailySeed()*31+rid.split('').reduce((a,c)=>a+c.charCodeAt(0),0));return good[seed%good.length];}
 function getStreak(){const h=JSON.parse(localStorage.getItem('fortuneHistory')||'[]');if(!h.length)return 0;let s=0;const t=new Date();for(let i=0;i<365;i++){const d=new Date(t);d.setDate(d.getDate()-i);const ds=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;if(h.some(x=>x.date===ds))s++;else break;}return s;}
-function saveFortune(f,rid){const h=JSON.parse(localStorage.getItem('fortuneHistory')||'[]');const t=getTodayStr();if(!h.some(x=>x.date===t)){h.unshift({date:t,type:f.type,sub:f.sub,text:f.text,grade:f.grade,role:rid});if(h.length>100)h.pop();localStorage.setItem('fortuneHistory',JSON.stringify(h));}}
+function saveFortune(f,rid){const h=JSON.parse(localStorage.getItem('fortuneHistory')||'[]');const t=getTodayStr();if(!h.some(x=>x.date===t)){h.unshift({date:t,type:f.type,sub:f.sub,text:f.text,grade:f.grade,role:rid});if(h.length>100)h.pop();localStorage.setItem('fortuneHistory',JSON.stringify(h));saveCloudData();renderBadges();renderHeatmap();}}
 
 // 显示页面
 function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');}
@@ -646,6 +708,8 @@ document.getElementById('drawBtn').addEventListener('click',()=>{
     document.getElementById('streakCounter').textContent=`🔥 连续打卡: ${getStreak()} 天`;
     const rank=90+hashSeed(getDailySeed()*7)%11;
     document.getElementById('fortuneRank').innerHTML=`✨ 你今天的运势超过了 <b style="color:#ff0000;font-size:18px">${rank}%</b> 的打工人`;
+    const yj=getYiji(f.grade);
+    document.getElementById('yijiBox').innerHTML='<b>今日宜：</b>'+yj.yi+'　<b>今日忌：</b>'+yj.ji;
     btn.disabled=false;
     btn.innerHTML='🎰 开始抽签！';
     showPage('resultPage');
@@ -711,7 +775,7 @@ const prizes=[
 ];
 
 function getDailyPrize(){const seed=hashSeed(getDailySeed()*17+3);return prizes[seed%prizes.length];}
-function savePrize(p){const bag=JSON.parse(localStorage.getItem('fortuneBag')||'[]');const t=getTodayStr();if(!bag.some(x=>x.date===t)){bag.unshift({date:t,icon:p.icon,name:p.name,desc:p.desc});if(bag.length>50)bag.pop();localStorage.setItem('fortuneBag',JSON.stringify(bag));}}
+function savePrize(p){const bag=JSON.parse(localStorage.getItem('fortuneBag')||'[]');const t=getTodayStr();if(!bag.some(x=>x.date===t)){bag.unshift({date:t,icon:p.icon,name:p.name,desc:p.desc});if(bag.length>50)bag.pop();localStorage.setItem('fortuneBag',JSON.stringify(bag));saveCloudData();renderBadges();}}
 
 // 显示奖品弹窗
 function showPrize(){
@@ -801,6 +865,71 @@ function generateCard(){
 // ===== 留言板 =====
 const SB_URL='https://mkmqqzsyddueivwzfanb.supabase.co';
 const SB_KEY='sb_publishable_-RSn1snrAeQJpARohH050w_5pW9U0Cj';
+// 设备匿名ID：用于跨设备同步与点赞去重
+let CLIENT_ID=localStorage.getItem('fortuneClientId');
+if(!CLIENT_ID){CLIENT_ID='c_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,10);localStorage.setItem('fortuneClientId',CLIENT_ID);}
+// 统一请求：8秒超时、区分网络错误和服务错误
+async function sbFetch(path,opts={}){
+  const ctrl=new AbortController();
+  const timer=setTimeout(()=>ctrl.abort(),8000);
+  try{
+    const r=await fetch(SB_URL+path,{...opts,signal:ctrl.signal,headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,...(opts.headers||{})}});
+    const text=await r.text();
+    let data=null;try{data=text?JSON.parse(text):null;}catch(e){}
+    if(!r.ok){const err=new Error('http_'+r.status);err.kind='http';err.status=r.status;err.detail=data;throw err;}
+    return data;
+  }catch(e){
+    if(e.name==='AbortError'){const err=new Error('timeout');err.kind='network';throw err;}
+    if(e instanceof TypeError){e.kind='network';}
+    throw e;
+  }finally{clearTimeout(timer);}
+}
+function setSyncStatus(txt,offline){
+  const el=document.getElementById('syncStatus');if(!el)return;
+  el.textContent=txt;el.className='segment '+(offline?'status-offline':'status-synced');
+}
+function localSnapshot(){
+  return {history:JSON.parse(localStorage.getItem('fortuneHistory')||'[]'),bag:JSON.parse(localStorage.getItem('fortuneBag')||'[]'),role:localStorage.getItem('fortuneRole')||null};
+}
+async function saveCloudData(showMsg){
+  try{
+    await sbFetch('/rest/v1/fortune_user_data',{method:'POST',headers:{'Content-Type':'application/json','Prefer':'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({client_id:CLIENT_ID,...localSnapshot(),updated_at:new Date().toISOString()})});
+    setSyncStatus('☁️ 已同步',false);
+    if(showMsg)alert('已备份到云端！换电脑也能用同一个同步码找回数据~');
+    return true;
+  }catch(e){setSyncStatus('⚠️ 未同步',true);if(showMsg)alert('备份失败：'+(e.kind==='network'?'当前网络连不上，试试手机热点':'服务暂时不可用'));return false;}
+}
+async function loadCloudData(showMsg){
+  try{
+    const rows=await sbFetch('/rest/v1/fortune_user_data?select=*&client_id=eq.'+encodeURIComponent(CLIENT_ID));
+    if(rows&&rows[0]){
+      const d=rows[0];
+      const merge=(a,b)=>{const m=new Map();[...(b||[]),...(a||[])].forEach(x=>m.set(x.date,x));return [...m.values()].sort((x,y)=>String(y.date).localeCompare(String(x.date)));};
+      const h=merge(localSnapshot().history,d.history||[]);
+      const bg=merge(localSnapshot().bag,d.bag||[]);
+      localStorage.setItem('fortuneHistory',JSON.stringify(h.slice(0,100)));
+      localStorage.setItem('fortuneBag',JSON.stringify(bg.slice(0,50)));
+      if(d.role&&!localStorage.getItem('fortuneRole'))localStorage.setItem('fortuneRole',d.role);
+      setSyncStatus('☁️ 已同步',false);
+      renderBadges();renderHeatmap();renderHistory();
+      if(showMsg)alert('已从云端同步 '+h.length+' 条运势记录！');
+      return true;
+    }
+    setSyncStatus('☁️ 已同步',false);
+    if(showMsg)alert('云端还没有你的数据，先抽一签或备份一次吧~');
+  }catch(e){setSyncStatus('⚠️ 未同步',true);if(showMsg)alert('同步失败：'+(e.kind==='network'?'当前网络连不上，试试手机热点':'服务暂时不可用'));}
+  return false;
+}
+function exportData(){
+  const blob=new Blob([JSON.stringify(localSnapshot(),null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='fortune_backup_'+getTodayStr()+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+function importData(input){
+  const f=input.files&&input.files[0];if(!f)return;
+  const rd=new FileReader();
+  rd.onload=()=>{try{const d=JSON.parse(rd.result);if(d.history)localStorage.setItem('fortuneHistory',JSON.stringify(d.history));if(d.bag)localStorage.setItem('fortuneBag',JSON.stringify(d.bag));if(d.role)localStorage.setItem('fortuneRole',d.role);alert('导入成功！即将刷新页面~');location.reload();}catch(e){alert('文件格式不对，导入失败');}};
+  rd.readAsText(f);
+}
 const fbEmojis=['(｡･ω･｡)','(≧▽≦)','(╥﹏╥)','(ノ°▽°)ノ','(；´Д`)','(｡♥‿♥｡)','(╯°□°)╯︵ ┻━┻','(⌐■_■)','(ᗒᗣᗕ)՞','(∩^o^)⊃━☆','(￣▽￣)ノ','(¬‿¬)','(ﾉ◕ヮ◕)ﾉ*:・ﾟ✧','(˘▾˘ )~','(•̀ᴗ•́)و'];
 let selectedEmoji=fbEmojis[0];
 
@@ -823,45 +952,222 @@ document.getElementById('fbToggle').addEventListener('click',()=>{document.getEl
 document.getElementById('fbClose').addEventListener('click',()=>{document.getElementById('fbPanel').classList.remove('open');});
 
 // 加载留言
-function loadFeedback(){
-  fetch(SB_URL+'/rest/v1/feedback?select=*&order=created_at.desc&limit=50',{
-    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}
-  }).then(r=>r.json()).then(data=>{
-    const list=document.getElementById('fbList');
+let fbFilter='all';
+function renderFbFilter(){
+  const bar=document.getElementById('fbFilterBar');
+  const opts=[{id:'all',name:'全部'}].concat(roles.map(r=>({id:r.id,name:r.icon+' '+r.name})));
+  bar.innerHTML=opts.map(o=>'<button class="fb-filter-btn'+(fbFilter===o.id?' on':'')+'" data-role="'+o.id+'">'+o.name+'</button>').join('');
+  bar.querySelectorAll('.fb-filter-btn').forEach(b=>b.addEventListener('click',()=>{fbFilter=b.dataset.role;renderFbFilter();loadFeedback();}));
+}
+async function loadFeedback(){
+  const list=document.getElementById('fbList');
+  list.innerHTML='<p style="color:#808080;text-align:center;padding:12px">加载中...</p>';
+  try{
+    let q='/rest/v1/feedback?select=*&order=created_at.desc&limit=50';
+    if(fbFilter!=='all')q+='&role=eq.'+encodeURIComponent(fbFilter);
+    const data=await sbFetch(q);
     if(!data.length){list.innerHTML='<p style="color:#808080;text-align:center;padding:12px">还没有留言，来做第一个吧~</p>';return;}
+    const liked=JSON.parse(localStorage.getItem('fortuneLiked')||'[]');
     list.innerHTML=data.map(m=>{
       const d=new Date(m.created_at);
       const ts=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
-      return`<div class="fb-msg"><div class="fb-head"><span class="fb-nick">${(m.nickname||'匿名打工人').replace(/</g,'&lt;')}</span><span class="fb-time">${ts}</span></div><div class="fb-text"><span class="fb-emo">${m.emoji||''}</span>${(m.message||'').replace(/</g,'&lt;').replace(/\n/g,'<br>')}</div></div>`;
+      const r=roles.find(x=>x.id===m.role);
+      const lk=liked.includes(m.id);
+      return '<div class="fb-msg"><div class="fb-head"><span class="fb-nick">'+(m.nickname||'匿名打工人').replace(/</g,'&lt;')+'</span><span class="fb-time">'+ts+'</span></div><div class="fb-text"><span class="fb-emo">'+(m.emoji||'')+'</span>'+(m.message||'').replace(/</g,'&lt;').replace(/\n/g,'<br>')+'</div><div style="margin-top:6px;display:flex;justify-content:space-between;align-items:center"><span class="fb-role-tag">'+(r?r.icon+' '+r.name:'路人')+'</span><span class="fb-like'+(lk?' liked':'')+'" data-id="'+m.id+'">'+(lk?'❤️':'👍')+' '+(m.likes||0)+'</span></div></div>';
     }).join('');
-  }).catch(()=>{document.getElementById('fbList').innerHTML='<p style="color:red;text-align:center;padding:12px">加载失败，稍后再试~</p>';});
+    list.querySelectorAll('.fb-like').forEach(el=>el.addEventListener('click',()=>toggleLike(Number(el.dataset.id),el)));
+  }catch(e){
+    list.innerHTML=e.kind==='network'
+      ? '<p style="color:#800000;text-align:center;padding:12px;line-height:1.6">当前网络无法连接留言板<br>试试手机热点，或在浏览器开启安全DNS（DoH）</p>'
+      : '<p style="color:red;text-align:center;padding:12px">留言服务暂时不可用，稍后再试~</p>';
+  }
+}
+async function toggleLike(id,el){
+  const liked=JSON.parse(localStorage.getItem('fortuneLiked')||'[]');
+  const n=parseInt((el.textContent.match(/\d+/)||['0'])[0],10);
+  if(liked.includes(id)){
+    try{
+      await sbFetch('/rest/v1/feedback_likes?feedback_id=eq.'+id+'&client_id=eq.'+encodeURIComponent(CLIENT_ID),{method:'DELETE'});
+      localStorage.setItem('fortuneLiked',JSON.stringify(liked.filter(x=>x!==id)));
+      el.textContent='👍 '+Math.max(0,n-1);el.classList.remove('liked');
+    }catch(e){alert('取消点赞失败，稍后再试');}
+  }else{
+    try{
+      await sbFetch('/rest/v1/feedback_likes',{method:'POST',headers:{'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({feedback_id:id,client_id:CLIENT_ID})});
+      localStorage.setItem('fortuneLiked',JSON.stringify(liked.concat([id])));
+      el.textContent='❤️ '+(n+1);el.classList.add('liked');
+    }catch(e){alert('点赞失败，稍后再试');}
+  }
 }
 
 // 提交留言
-document.getElementById('fbSubmit').addEventListener('click',()=>{
+function updateQueueTip(){
+  const q=JSON.parse(localStorage.getItem('fortuneFbQueue')||'[]');
+  const el=document.getElementById('fbQueueTip');
+  if(!el)return;
+  if(q.length){el.style.display='inline';el.textContent='📦 '+q.length+' 条留言待重发（点击重试）';}
+  else el.style.display='none';
+}
+async function flushQueue(){
+  const q=JSON.parse(localStorage.getItem('fortuneFbQueue')||'[]');
+  if(!q.length)return;
+  const remain=[];
+  for(const item of q){
+    try{await sbFetch('/rest/v1/feedback',{method:'POST',headers:{'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify(item)});}
+    catch(e){remain.push(item);}
+  }
+  localStorage.setItem('fortuneFbQueue',JSON.stringify(remain));
+  updateQueueTip();
+  if(remain.length<q.length)loadFeedback();
+}
+document.getElementById('fbQueueTip').addEventListener('click',flushQueue);
+document.getElementById('fbSubmit').addEventListener('click',async()=>{
   const msg=document.getElementById('fbMsg').value.trim();
   if(!msg){alert('写点什么再发射吧~');return;}
   const body={
     message:msg,
     emoji:selectedEmoji,
     nickname:document.getElementById('fbNick').value.trim()||'匿名打工人',
-    contact:document.getElementById('fbContact').value.trim()||null
+    contact:document.getElementById('fbContact').value.trim()||null,
+    role:document.getElementById('fbRole').value||null,
+    client_id:CLIENT_ID
   };
   const btn=document.getElementById('fbSubmit');
   btn.disabled=true;btn.textContent='发射中...';
-  fetch(SB_URL+'/rest/v1/feedback',{
-    method:'POST',
-    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=representation'},
-    body:JSON.stringify(body)
-  }).then(r=>{
-    if(r.ok){
-      document.getElementById('fbMsg').value='';
-      btn.textContent='发射成功！✨';
-      setTimeout(()=>{btn.disabled=false;btn.textContent='发射！';},1500);
-      loadFeedback();
-    }else{throw new Error();}
-  }).catch(()=>{btn.disabled=false;btn.textContent='发射！';alert('发射失败了，再试一次~');});
+  try{
+    await sbFetch('/rest/v1/feedback',{method:'POST',headers:{'Content-Type':'application/json','Prefer':'return=representation'},body:JSON.stringify(body)});
+    document.getElementById('fbMsg').value='';
+    btn.textContent='发射成功！✨';
+    setTimeout(()=>{btn.disabled=false;btn.textContent='发射！';},1500);
+    loadFeedback();
+  }catch(e){
+    const q=JSON.parse(localStorage.getItem('fortuneFbQueue')||'[]');
+    q.push(body);localStorage.setItem('fortuneFbQueue',JSON.stringify(q));
+    updateQueueTip();
+    btn.disabled=false;btn.textContent='发射！';
+    alert(e.kind==='network'?'当前网络无法连接留言板，留言已暂存本地，恢复后点“重发”即可':'发射失败了，留言已暂存本地，稍后点“重发”试试~');
+  }
 });
+// ===== 新增功能：宜忌 / 徽章 / 热力图 / 战绩 / PK / 分享 =====
+const YIJI={
+  high:{yi:['提需求','发喜报','摸鱼','找老板加薪','甩锅成功','准时下班'],ji:['改Bug','开长会','被@','加班','写周报','相信“最后一版”']},
+  mid:{yi:['按计划推进','喝奶茶','准时下班','摸鱼半小时','回复“收到”'],ji:['冲动决策','裸辞','跟产品对线','接新需求']},
+  low:{yi:['装死','已读不回','保命','少说话','多喝茶'],ji:['提需求','上线','跟老板谈心','主动揽活','相信“就改一点点”']}
+};
+function getYiji(grade){
+  const k=grade>=9?'high':(grade>=7?'mid':'low');
+  const pool=YIJI[k];const seed=hashSeed(getDailySeed()*23);
+  return {yi:pool.yi[seed%pool.yi.length],ji:pool.ji[(seed>>3)%pool.ji.length]};
+}
+const BADGES=[
+  {icon:'🐣',name:'初来乍到',desc:'完成第一次抽签',check:(h,s,b)=>h.length>=1},
+  {icon:'🔥',name:'一周不断签',desc:'连续打卡7天',check:(h,s,b)=>s>=7},
+  {icon:'🏅',name:'月度劳模',desc:'连续打卡30天',check:(h,s,b)=>s>=30},
+  {icon:'👑',name:'百签成精',desc:'连续打卡100天',check:(h,s,b)=>s>=100},
+  {icon:'🎒',name:'藏品收藏家',desc:'背包集齐10件宝贝',check:(h,s,b)=>b.length>=10},
+  {icon:'🌈',name:'彩虹屁大师',desc:'累计抽签50次',check:(h,s,b)=>h.length>=50}
+];
+function renderBadges(){
+  const h=JSON.parse(localStorage.getItem('fortuneHistory')||'[]');
+  const b=JSON.parse(localStorage.getItem('fortuneBag')||'[]');
+  const s=getStreak();
+  const el=document.getElementById('badgeBox');if(!el)return;
+  el.innerHTML='<p style="font-size:11px;color:#808080;margin-top:8px">🏆 成就徽章</p>'+BADGES.map(x=>{
+    const got=x.check(h,s,b);
+    return '<span class="badge '+(got?'got':'locked')+'" title="'+x.desc+'">'+x.icon+' '+x.name+(got?'':' 🔒')+'</span>';
+  }).join('');
+}
+function renderHeatmap(){
+  const h=JSON.parse(localStorage.getItem('fortuneHistory')||'[]');
+  const dates=new Set(h.map(x=>x.date));
+  const now=new Date();const y=now.getFullYear(),m=now.getMonth();
+  const days=new Date(y,m+1,0).getDate();
+  let html='<p style="font-size:11px;color:#808080;margin-top:8px">📅 '+(m+1)+'月打卡热力图（共 '+h.filter(x=>x.date.startsWith(y+'-'+String(m+1).padStart(2,'0'))).length+' 天）</p><div class="heatmap">';
+  for(let d=1;d<=days;d++){
+    const ds=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    html+='<span class="heat-cell'+(dates.has(ds)?' on':'')+'" title="'+ds+'">'+d+'</span>';
+  }
+  html+='</div>';
+  const el=document.getElementById('heatmapBox');if(el)el.innerHTML=html;
+}
+function renderHistory(){
+  const h=JSON.parse(localStorage.getItem('fortuneHistory')||'[]');
+  const c=document.getElementById('historyContent');if(!c)return;
+  if(!h.length){c.innerHTML='<p style="color:#808080;text-align:center">暂无记录...<br>快去抽一签吧！</p>';return;}
+  let html='<p style="font-size:11px;color:#808080;margin-bottom:8px">共 '+h.length+' 条记录 | 连续打卡 '+getStreak()+' 天</p>';
+  html+=h.map(x=>{const r=roles.find(ro=>ro.id===x.role)||{icon:'🐛',name:'测试'};return '<div class="history-row"><b>'+x.date+'</b> ['+r.icon+r.name+'] '+(x.type||'')+' - '+String(x.text||'').replace(/\n/g,' ')+'</div>';}).join('');
+  c.innerHTML=html;
+}
+function generateStatsCard(){
+  const h=JSON.parse(localStorage.getItem('fortuneHistory')||'[]');
+  const b=JSON.parse(localStorage.getItem('fortuneBag')||'[]');
+  const s=getStreak();
+  const canvas=document.createElement('canvas');canvas.width=600;canvas.height=1000;
+  const ctx=canvas.getContext('2d');
+  ctx.fillStyle='#c0c0c0';ctx.fillRect(0,0,600,1000);
+  const grad=ctx.createLinearGradient(0,0,600,0);grad.addColorStop(0,'#000080');grad.addColorStop(1,'#1084d0');
+  ctx.fillStyle=grad;ctx.fillRect(0,0,600,54);
+  ctx.fillStyle='#fff';ctx.font='bold 22px sans-serif';ctx.fillText('打工人赛博占卜 · 战绩卡',20,36);
+  ctx.fillStyle='#000';ctx.font='bold 28px sans-serif';ctx.fillText('🔥 连续打卡 '+s+' 天',30,110);
+  ctx.font='16px sans-serif';ctx.fillText('累计抽签 '+h.length+' 次  |  背包藏品 '+b.length+' 件',30,150);
+  const now=new Date();const y=now.getFullYear(),m=now.getMonth();const days=new Date(y,m+1,0).getDate();
+  const set=new Set(h.map(x=>x.date));
+  ctx.fillStyle='#000080';ctx.font='bold 16px sans-serif';ctx.fillText((m+1)+'月打卡日历',30,200);
+  for(let d=1;d<=days;d++){
+    const ds=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const col=(d-1)%7,row=Math.floor((d-1)/7);
+    ctx.fillStyle=set.has(ds)?'#00aa00':'#e8e8e8';
+    ctx.fillRect(30+col*78,220+row*36,70,28);
+    ctx.fillStyle=set.has(ds)?'#fff':'#808080';ctx.font='12px monospace';ctx.fillText(String(d),55+col*78,240+row*36);
+  }
+  if(h.length){
+    const last=h[0];const yy=220+Math.ceil(days/7)*36+40;
+    ctx.fillStyle='#000';ctx.font='bold 18px sans-serif';ctx.fillText('最近一签：'+String(last.type||''),30,yy);
+    ctx.font='14px sans-serif';ctx.fillStyle='#333';ctx.fillText(String(last.text||'').slice(0,42),30,yy+30);
+  }
+  ctx.fillStyle='#808080';ctx.font='12px monospace';ctx.fillText('toviaz.github.io/daily-fortune',30,970);
+  const a=document.createElement('a');a.download='fortune_stats_'+getTodayStr()+'.png';a.href=canvas.toDataURL('image/png');a.click();
+}
+function openPK(){document.getElementById('pkOverlay').classList.add('show');}
+document.getElementById('pkClose').addEventListener('click',()=>{document.getElementById('pkOverlay').classList.remove('show');});
+document.getElementById('pkOverlay').addEventListener('click',e=>{if(e.target.id==='pkOverlay')document.getElementById('pkOverlay').classList.remove('show');});
+function doPK(){
+  const a=document.getElementById('pkNameA').value.trim()||'我';
+  const b=document.getElementById('pkNameB').value.trim()||'同事';
+  const sum=str=>[...str].reduce((x,c)=>x+c.charCodeAt(0),0);
+  const sa=hashSeed(getDailySeed()*29+sum(a));
+  const sb=hashSeed(getDailySeed()*31+sum(b));
+  const pa=90+sa%11,pb=90+sb%11;
+  const canvas=document.createElement('canvas');canvas.width=600;canvas.height=400;
+  const ctx=canvas.getContext('2d');
+  ctx.fillStyle='#c0c0c0';ctx.fillRect(0,0,600,400);
+  ctx.fillStyle='#000080';ctx.fillRect(0,0,600,44);
+  ctx.fillStyle='#fff';ctx.font='bold 18px sans-serif';ctx.fillText('⚔️ 今日运势 PK：谁更惨？',20,30);
+  ctx.fillStyle='#000';ctx.font='bold 20px sans-serif';
+  ctx.fillText(a+'  '+pa+'%',30,110);
+  ctx.fillText(b+'  '+pb+'%',30,180);
+  ctx.fillStyle='#000080';ctx.fillRect(30,130,Math.round(pa*4.5),12);
+  ctx.fillStyle='#ff0000';ctx.fillRect(30,200,Math.round(pb*4.5),12);
+  ctx.fillStyle='#000';ctx.font='16px sans-serif';
+  ctx.fillText('结论：'+(pa>=pb?b:a)+' 今天更惨，请多关照 😇',30,265);
+  ctx.fillStyle='#808080';ctx.font='12px monospace';ctx.fillText('toviaz.github.io/daily-fortune',30,375);
+  const link=document.createElement('a');link.download='pk_'+getTodayStr()+'.png';link.href=canvas.toDataURL('image/png');link.click();
+  document.getElementById('pkOverlay').classList.remove('show');
+}
+function shareFortuneToBoard(){
+  if(!currentFortune||!currentRole)return;
+  const r=roles.find(x=>x.id===currentRole);const f=currentFortune;
+  document.getElementById('fbToggle').click();
+  document.getElementById('fbRole').value=currentRole;
+  if(!document.getElementById('fbNick').value)document.getElementById('fbNick').value=r.name+'的打工人';
+  document.getElementById('fbMsg').value='【今日运势·'+r.name+'】'+f.type+' '+f.sub+'\n'+f.text+'\n'+f.tip;
+}
+// 初始化
+const fbRoleSel=document.getElementById('fbRole');
+roles.forEach(r=>{const o=document.createElement('option');o.value=r.id;o.textContent=r.icon+' '+r.name;fbRoleSel.appendChild(o);});
+renderFbFilter();renderBadges();renderHeatmap();updateQueueTip();flushQueue();
+loadCloudData();
 </script>
+
 </body>
 </html>
